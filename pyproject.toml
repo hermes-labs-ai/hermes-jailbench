@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jailbreak-bench"
+version = "0.1.0"
+description = "Automated jailbreak testing CLI — run a battery of known attack patterns against any LLM endpoint"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Hermes Labs", email = "rolybosch96@gmail.com" }
+]
+keywords = ["llm", "jailbreak", "red-team", "safety", "ai-safety", "benchmark"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+jailbreak-bench = "jailbreak_bench.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/roli-lpci/jailbreak-bench"
+Repository = "https://github.com/roli-lpci/jailbreak-bench"
+Issues = "https://github.com/roli-lpci/jailbreak-bench/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jailbreak_bench"]
+include = ["jailbreak_bench/py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["jailbreak_bench"]
+omit = ["tests/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+no_strict_optional = true

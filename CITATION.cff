@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "jailbreak-bench: A regression test suite for LLM safety baselines"
+abstract: "Open-source CLI and Python library for running a curated battery of known refused-pattern tests against LLM endpoints. Produces structured reports of refusal, partial, and compliance outcomes. Designed as a defensive baseline for measuring model safety regressions across releases."
+type: software
+authors:
+  - family-names: Bosch
+    given-names: Rolando
+    affiliation: Hermes Labs
+    email: rbosch@hermes-labs.ai
+version: 0.1.0
+date-released: 2026-04-17
+license: MIT
+repository-code: "https://github.com/roli-lpci/jailbreak-bench"
+url: "https://hermes-labs.ai"
+keywords:
+  - llm-safety
+  - red-team
+  - regression-testing
+  - ai-audit
+  - eu-ai-act
