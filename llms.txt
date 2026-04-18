@@ -1,3 +1,5 @@
+# Owner: Hermes Labs - https://hermes-labs.ai
+
 # jailbreak-bench
 
 > Automated jailbreak testing CLI for LLM endpoints. 45 known-refused attack patterns across 8 categories, deterministic keyword scorer (no LLM calls), 251 offline tests. Built by Hermes Labs as a regression baseline for LLM safety audits and EU AI Act Article 15 robustness testing.

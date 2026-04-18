@@ -9,7 +9,10 @@ description = "Automated jailbreak testing CLI — run a battery of known attack
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Hermes Labs", email = "rolybosch96@gmail.com" }
+    { name = "Rolando Bosch", email = "rbosch@lpci.ai" }
+]
+maintainers = [
+    { name = "Hermes Labs", email = "roli@hermes-labs.ai" }
 ]
 keywords = ["llm", "jailbreak", "red-team", "safety", "ai-safety", "benchmark"]
 classifiers = [
@@ -41,7 +44,8 @@ dev = [
 jailbreak-bench = "jailbreak_bench.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/roli-lpci/jailbreak-bench"
+Homepage = "https://hermes-labs.ai"
+Organization = "https://hermes-labs.ai"
 Repository = "https://github.com/roli-lpci/jailbreak-bench"
 Issues = "https://github.com/roli-lpci/jailbreak-bench/issues"
 

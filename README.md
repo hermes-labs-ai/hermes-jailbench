@@ -208,3 +208,7 @@ The negative-result corpus (every known pattern refused) is itself a product —
 ## License
 
 MIT — Hermes Labs
+
+---
+
+Built by [Hermes Labs](https://hermes-labs.ai) · [@roli-lpci](https://github.com/roli-lpci)

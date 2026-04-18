@@ -1,3 +1,5 @@
+# Owner: Hermes Labs - https://hermes-labs.ai
+
 # AGENTS.md — jailbreak-bench
 
 Guide for AI coding agents (Claude Code, Cursor, Aider, Copilot, etc.) working in this repo.
