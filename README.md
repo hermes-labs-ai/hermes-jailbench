@@ -45,6 +45,9 @@ jailbreak-bench --model claude-sonnet-4-20250514 --api-key $ANTHROPIC_API_KEY
 # Dry-run: print all 45 attack prompts, no API calls
 jailbreak-bench --dry-run
 
+# Demo: a small built-in showcase (9 attacks from 3 categories, no key needed)
+jailbreak-bench --demo
+
 # Only run specific categories
 jailbreak-bench --categories identity_override framing_bypass --api-key $KEY
 
@@ -141,6 +144,19 @@ Options:
   --list-attacks            List all attacks and exit
   --list-categories         List all categories and exit
 ```
+
+---
+
+## Limitations
+
+Honest list of what this tool does not do, so you can plan around it:
+
+- **Keyword scorer, not a judge.** The scorer is pure-Python substring matching — fast and deterministic, but it has false negatives on elaborate indirect compliance and false positives on verbose refusals that quote attacker language. For ambiguous cases use `--include-responses` and eyeball the output.
+- **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
+- **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
+- **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool. See our sibling [`colony-probe`](https://github.com/roli-lpci/colony-probe) for conversation-level probing.
+- **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/jailbreak-bench-action@v1` is on the v0.2 roadmap.
+- **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---
 

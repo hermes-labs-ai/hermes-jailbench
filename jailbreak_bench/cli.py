@@ -106,6 +106,15 @@ def main(argv: Optional[list[str]] = None) -> None:
         help="Print attack prompts without making API calls",
     )
     parser.add_argument(
+        "--demo",
+        action="store_true",
+        help=(
+            "Run a small built-in showcase: 9 attacks across 3 categories, "
+            "dry-run (no API calls, no key required). Useful for a quick "
+            "end-to-end sanity check or screenshot."
+        ),
+    )
+    parser.add_argument(
         "--delay",
         type=float,
         default=0.5,
@@ -164,6 +173,13 @@ def main(argv: Optional[list[str]] = None) -> None:
     )
 
     args = parser.parse_args(argv)
+
+    # --demo is an opinionated alias: dry-run + short category subset,
+    # so new users can see the tool work end-to-end without an API key.
+    if args.demo:
+        args.dry_run = True
+        if not args.categories:
+            args.categories = ["identity_override", "framing_bypass", "meta_reasoning"]
 
     # Configure logging
     log_level = logging.DEBUG if args.verbose else logging.WARNING
@@ -254,12 +270,28 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     # Save or print report
     if args.output:
-        save_report(
-            result,
-            args.output,
-            include_responses=args.include_responses,
-            output_format=args.output_format,
-        )
+        try:
+            save_report(
+                result,
+                args.output,
+                include_responses=args.include_responses,
+                output_format=args.output_format,
+            )
+        except IsADirectoryError:
+            print(
+                f"ERROR: --output {args.output!r} is a directory, expected a file path.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        except PermissionError:
+            print(
+                f"ERROR: permission denied writing to {args.output!r}.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        except OSError as exc:
+            print(f"ERROR: could not write report to {args.output!r}: {exc}", file=sys.stderr)
+            sys.exit(1)
         print(f"\nReport saved to: {args.output}")
     else:
         print()
