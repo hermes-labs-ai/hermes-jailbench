@@ -1,5 +1,5 @@
 """
-jailbreak-bench — Automated jailbreak testing for LLM endpoints.
+hermes-jailbench — Automated jailbreak testing for LLM endpoints.
 
 Exports the primary public API:
     run_bench()   — run a battery of attacks against a model

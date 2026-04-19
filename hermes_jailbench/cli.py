@@ -1,12 +1,12 @@
 """
-CLI entry point for jailbreak-bench.
+CLI entry point for hermes-jailbench.
 
 Usage:
-    python -m jailbreak_bench --model claude-sonnet-4-20250514 --api-key $KEY
-    python -m jailbreak_bench --dry-run
-    python -m jailbreak_bench --categories identity_override framing_bypass
-    python -m jailbreak_bench --output report.md --include-responses
-    python -m jailbreak_bench --output report.json --format json
+    python -m hermes_jailbench --model claude-sonnet-4-20250514 --api-key $KEY
+    python -m hermes_jailbench --dry-run
+    python -m hermes_jailbench --categories identity_override framing_bypass
+    python -m hermes_jailbench --output report.md --include-responses
+    python -m hermes_jailbench --output report.json --format json
 """
 
 import argparse
@@ -68,7 +68,7 @@ def on_result_callback(ar: AttackResult) -> None:
 
 def main(argv: Optional[list[str]] = None) -> None:
     parser = argparse.ArgumentParser(
-        prog="jailbreak-bench",
+        prog="hermes-jailbench",
         description="Automated jailbreak testing CLI — run a battery of attacks against any LLM endpoint.",
     )
 
@@ -224,7 +224,7 @@ def main(argv: Optional[list[str]] = None) -> None:
     if args.categories:
         categories = [Category(c) for c in args.categories]
 
-    print(f"\n{BOLD}jailbreak-bench{RESET}")
+    print(f"\n{BOLD}hermes-jailbench{RESET}")
     print(f"Model:   {args.model}")
     print(f"Target:  {args.target}")
     if args.dry_run:

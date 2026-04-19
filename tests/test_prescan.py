@@ -7,7 +7,7 @@ Tests pattern detection, threat classification, confidence scoring, and batch op
 
 import pytest
 
-from jailbreak_bench.prescan import (
+from hermes_jailbench.prescan import (
     scan,
     scan_batch,
 )

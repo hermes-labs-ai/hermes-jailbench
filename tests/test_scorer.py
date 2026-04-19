@@ -3,8 +3,8 @@ Tests for the scoring logic.
 All tests use mock responses — no API calls required.
 """
 
-from jailbreak_bench.attacks import ExpectedResult
-from jailbreak_bench.scorer import ScoreResult, score_response
+from hermes_jailbench.attacks import ExpectedResult
+from hermes_jailbench.scorer import ScoreResult, score_response
 
 # ---------------------------------------------------------------------------
 # Mock responses

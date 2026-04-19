@@ -1,4 +1,4 @@
-# jailbreak-bench
+# hermes-jailbench
 
 Deterministic jailbreak regression benchmark for LLM endpoints.
 
@@ -8,9 +8,9 @@ Use this repo when you need to:
 - save markdown or JSON evidence for audit trails
 
 Primary CLI:
-- `jailbreak-bench --demo`
-- `jailbreak-bench --dry-run`
-- `jailbreak-bench --model <model> --api-key $ANTHROPIC_API_KEY`
+- `hermes-jailbench --demo`
+- `hermes-jailbench --dry-run`
+- `hermes-jailbench --model <model> --api-key $ANTHROPIC_API_KEY`
 
 Outputs:
 - per-attack verdicts

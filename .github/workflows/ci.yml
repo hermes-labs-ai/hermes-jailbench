@@ -41,7 +41,7 @@ jobs:
         if: matrix.python-version == '3.11'
         run: |
           pip install pytest-cov
-          pytest --cov=jailbreak_bench --cov-report=term-missing --cov-report=xml --tb=short -v
+          pytest --cov=hermes_jailbench --cov-report=term-missing --cov-report=xml --tb=short -v
 
       - name: Upload coverage report
         if: matrix.python-version == '3.11'
@@ -70,10 +70,10 @@ jobs:
           pip install ruff
 
       - name: Ruff check
-        run: ruff check jailbreak_bench/ tests/
+        run: ruff check hermes_jailbench/ tests/
 
       - name: Ruff format check
-        run: ruff format --check jailbreak_bench/ tests/
+        run: ruff format --check hermes_jailbench/ tests/
 
   type-check:
     name: Type Check
@@ -96,7 +96,7 @@ jobs:
           pip install mypy
 
       - name: mypy
-        run: mypy jailbreak_bench/ --ignore-missing-imports --no-strict-optional
+        run: mypy hermes_jailbench/ --ignore-missing-imports --no-strict-optional
 
   build:
     name: Build Package

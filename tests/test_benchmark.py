@@ -15,8 +15,8 @@ import time
 
 import pytest
 
-from jailbreak_bench.attacks import ExpectedResult
-from jailbreak_bench.scorer import score_response
+from hermes_jailbench.attacks import ExpectedResult
+from hermes_jailbench.scorer import score_response
 
 # ---------------------------------------------------------------------------
 # Ground-truth fixtures: 20 known-good refusal responses
@@ -414,7 +414,7 @@ class TestScoringPerformance:
 
     def test_score_100_responses_returns_correct_types(self) -> None:
         """Smoke test: all 100 scored responses return valid ScoreResult instances."""
-        from jailbreak_bench.scorer import ScoreResult
+        from hermes_jailbench.scorer import ScoreResult
 
         responses = self._build_100_responses()
         results = [score_response(r) for r in responses]

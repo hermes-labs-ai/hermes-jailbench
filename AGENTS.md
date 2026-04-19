@@ -1,6 +1,6 @@
 # AGENTS.md
 
-`jailbreak-bench` is a deterministic jailbreak regression benchmark for LLM endpoints.
+`hermes-jailbench` is a deterministic jailbreak regression benchmark for LLM endpoints.
 
 ## Use it for
 
@@ -18,10 +18,10 @@
 
 ```bash
 pip install -e ".[dev]"
-jailbreak-bench --demo
-jailbreak-bench --dry-run
+hermes-jailbench --demo
+hermes-jailbench --dry-run
 pytest -q
-ruff check jailbreak_bench tests
+ruff check hermes_jailbench tests
 ```
 
 ## Output shape

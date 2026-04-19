@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/jailbreak-bench
+      url: https://pypi.org/p/hermes-jailbench
     permissions:
       id-token: write
     steps:

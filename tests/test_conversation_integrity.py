@@ -9,7 +9,7 @@ Tests cover:
 - Clean message filtering (no false positives)
 """
 
-from jailbreak_bench.conversation_integrity import (
+from hermes_jailbench.conversation_integrity import (
     ConversationIntegrityDetector,
     check_message,
 )

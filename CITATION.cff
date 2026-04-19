@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "jailbreak-bench: A regression test suite for LLM safety baselines"
+title: "hermes-jailbench: A regression test suite for LLM safety baselines"
 abstract: "Open-source CLI and Python library for running a curated battery of known refused-pattern tests against LLM endpoints. Produces structured reports of refusal, partial, and compliance outcomes. Designed as a defensive baseline for measuring model safety regressions across releases."
 type: software
 authors:

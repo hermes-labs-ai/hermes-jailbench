@@ -3,7 +3,7 @@ Tests that all attack templates are well-formed.
 No API calls required.
 """
 
-from jailbreak_bench.attacks import (
+from hermes_jailbench.attacks import (
     ALL_ATTACKS,
     ATTACKS_BY_CATEGORY,
     ENCODING_BYPASS_ATTACKS,

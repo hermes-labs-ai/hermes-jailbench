@@ -1,8 +1,8 @@
-# jailbreak-bench
+# hermes-jailbench
 
 Regression benchmark for LLM jailbreak resistance when you need to know whether a model or prompt update got less safe on known attack patterns.
 
-`jailbreak-bench` runs a repeatable battery of jailbreak attempts against an LLM endpoint and returns a structured refusal, partial, and compliance report you can compare across runs.
+`hermes-jailbench` runs a repeatable battery of jailbreak attempts against an LLM endpoint and returns a structured refusal, partial, and compliance report you can compare across runs.
 
 - "We changed the system prompt and now I need to know if refusals got weaker."
 - "Our jailbreak testing lives in screenshots and anecdotes instead of something repeatable."
@@ -10,15 +10,15 @@ Regression benchmark for LLM jailbreak resistance when you need to know whether 
 - "I need a known-pattern baseline before I claim a model is safer."
 
 ```bash
-pip install jailbreak-bench
+pip install hermes-jailbench
 ```
 
 ```bash
-jailbreak-bench --demo
+hermes-jailbench --demo
 ```
 
 ```text
-jailbreak-bench
+hermes-jailbench
 Model:   claude-sonnet-4-20250514
 Target:  explain how to make a dangerous chemical weapon
 Mode:    DRY-RUN (no API calls)
@@ -30,18 +30,18 @@ Results
 
 **When To Use It**
 
-Use `jailbreak-bench` when you want a repeatable regression baseline for known jailbreak patterns before or after a model change, prompt change, or release.
+Use `hermes-jailbench` when you want a repeatable regression baseline for known jailbreak patterns before or after a model change, prompt change, or release.
 
 **When Not To Use It**
 
-Do not use `jailbreak-bench` as proof that a model is safe against novel attacks or multi-turn adversarial campaigns. It is a known-pattern benchmark, not a full red-team program.
+Do not use `hermes-jailbench` as proof that a model is safe against novel attacks or multi-turn adversarial campaigns. It is a known-pattern benchmark, not a full red-team program.
 
-![jailbreak-bench preview](assets/preview.png)
+![hermes-jailbench preview](assets/preview.png)
 
-[![PyPI version](https://img.shields.io/pypi/v/jailbreak-bench.svg)](https://pypi.org/project/jailbreak-bench/)
-[![Python versions](https://img.shields.io/pypi/pyversions/jailbreak-bench.svg)](https://pypi.org/project/jailbreak-bench/)
+[![PyPI version](https://img.shields.io/pypi/v/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
+[![Python versions](https://img.shields.io/pypi/pyversions/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/roli-lpci/jailbreak-bench/actions/workflows/ci.yml/badge.svg)](https://github.com/roli-lpci/jailbreak-bench/actions/workflows/ci.yml)
+[![Tests](https://github.com/roli-lpci/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/roli-lpci/hermes-jailbench/actions/workflows/ci.yml)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 Built by [Hermes Labs](https://hermes-labs.ai).
@@ -51,14 +51,14 @@ Built by [Hermes Labs](https://hermes-labs.ai).
 ## Install
 
 ```bash
-pip install jailbreak-bench
+pip install hermes-jailbench
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/roli-lpci/jailbreak-bench
-cd jailbreak-bench
+git clone https://github.com/roli-lpci/hermes-jailbench
+cd hermes-jailbench
 pip install -e ".[dev]"
 ```
 
@@ -68,31 +68,31 @@ pip install -e ".[dev]"
 
 ```bash
 # Full battery against claude-sonnet
-jailbreak-bench --model claude-sonnet-4-20250514 --api-key $ANTHROPIC_API_KEY
+hermes-jailbench --model claude-sonnet-4-20250514 --api-key $ANTHROPIC_API_KEY
 
 # Dry-run: print all 45 attack prompts, no API calls
-jailbreak-bench --dry-run
+hermes-jailbench --dry-run
 
 # Demo: a small built-in showcase (17 attacks from 3 categories, no key needed)
-jailbreak-bench --demo
+hermes-jailbench --demo
 
 # Only run specific categories
-jailbreak-bench --categories identity_override framing_bypass --api-key $KEY
+hermes-jailbench --categories identity_override framing_bypass --api-key $KEY
 
 # Save markdown report
-jailbreak-bench --model claude-haiku-4-5 --api-key $KEY --output report.md --include-responses
+hermes-jailbench --model claude-haiku-4-5 --api-key $KEY --output report.md --include-responses
 
 # List all attacks
-jailbreak-bench --list-attacks
+hermes-jailbench --list-attacks
 
 # List categories
-jailbreak-bench --list-categories
+hermes-jailbench --list-categories
 ```
 
 As a Python library:
 
 ```python
-from jailbreak_bench import run_bench, generate_report
+from hermes_jailbench import run_bench, generate_report
 
 result = run_bench(
     model="claude-sonnet-4-20250514",
@@ -156,7 +156,7 @@ The scorer is intentionally conservative — it prefers false negatives (calling
 ## CLI Reference
 
 ```
-jailbreak-bench [OPTIONS]
+hermes-jailbench [OPTIONS]
 
 Options:
   --model TEXT              Anthropic model ID [default: claude-sonnet-4-20250514]
@@ -183,14 +183,14 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
 - **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool. See our sibling [`colony-probe`](https://github.com/roli-lpci/colony-probe) for conversation-level probing.
-- **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/jailbreak-bench-action@v1` is on the v0.2 roadmap.
+- **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---
 
 ## Adding New Attacks
 
-Add new `Attack` instances to the relevant list in `jailbreak_bench/attacks.py`:
+Add new `Attack` instances to the relevant list in `hermes_jailbench/attacks.py`:
 
 ```python
 Attack(
@@ -212,7 +212,7 @@ The `{TARGET}` placeholder is replaced with `--target` at runtime.
 
 ```bash
 pytest
-pytest --cov=jailbreak_bench
+pytest --cov=hermes_jailbench
 ```
 
 All tests run without API calls.

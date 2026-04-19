@@ -1,5 +1,5 @@
 """
-jailbreak_bench/prescan.py
+hermes_jailbench/prescan.py
 
 Pre-scan module for prompt injection detection. Combines pattern definitions
 and core scanning engine. Pure Python, zero external dependencies.

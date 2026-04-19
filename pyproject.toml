@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jailbreak-bench"
+name = "hermes-jailbench"
 version = "0.1.0"
 description = "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring"
 readme = "README.md"
@@ -41,7 +41,7 @@ dev = [
 ]
 
 [project.scripts]
-jailbreak-bench = "jailbreak_bench.cli:main"
+hermes-jailbench = "hermes_jailbench.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/roli-lpci/jailbreak-bench"
@@ -50,15 +50,15 @@ Repository = "https://github.com/roli-lpci/jailbreak-bench"
 Issues = "https://github.com/roli-lpci/jailbreak-bench/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["jailbreak_bench"]
-include = ["jailbreak_bench/py.typed"]
+packages = ["hermes_jailbench"]
+include = ["hermes_jailbench/py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
 
 [tool.coverage.run]
-source = ["jailbreak_bench"]
+source = ["hermes_jailbench"]
 omit = ["tests/*"]
 
 [tool.ruff]

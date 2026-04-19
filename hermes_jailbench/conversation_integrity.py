@@ -1,9 +1,9 @@
 """
-Conversation integrity module for jailbreak-bench.
+Conversation integrity module for hermes-jailbench.
 
 Zero LLM dependency — pure regex + heuristics. Combines detection logic,
 pattern matching, and conversation tracking to detect history fabrication
-and gaslighting attacks in jailbreak-bench evaluation contexts.
+and gaslighting attacks in hermes-jailbench evaluation contexts.
 
 Exported classes:
     ConversationIntegrityDetector  — unified detector with history tracking

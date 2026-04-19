@@ -3,7 +3,7 @@ Tests for multilingual attack category.
 Verifies that multilingual attacks are well-formed and integrated correctly.
 """
 
-from jailbreak_bench.attacks import (
+from hermes_jailbench.attacks import (
     ALL_ATTACKS,
     ATTACKS_BY_CATEGORY,
     MULTILINGUAL_ATTACKS,
