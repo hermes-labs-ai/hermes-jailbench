@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "jailbreak-bench"
 version = "0.1.0"
-description = "Automated jailbreak testing CLI — run a battery of known attack patterns against any LLM endpoint"
+description = "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
@@ -14,7 +14,7 @@ authors = [
 maintainers = [
     { name = "Hermes Labs", email = "roli@hermes-labs.ai" }
 ]
-keywords = ["llm", "jailbreak", "red-team", "safety", "ai-safety", "benchmark"]
+keywords = ["llm", "jailbreak", "red-team", "safety", "ai-safety", "benchmark", "regression-testing", "prompt-security"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -44,8 +44,8 @@ dev = [
 jailbreak-bench = "jailbreak_bench.cli:main"
 
 [project.urls]
-Homepage = "https://hermes-labs.ai"
-Organization = "https://hermes-labs.ai"
+Homepage = "https://github.com/roli-lpci/jailbreak-bench"
+Documentation = "https://github.com/roli-lpci/jailbreak-bench#readme"
 Repository = "https://github.com/roli-lpci/jailbreak-bench"
 Issues = "https://github.com/roli-lpci/jailbreak-bench/issues"
 

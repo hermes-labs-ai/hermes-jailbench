@@ -1,50 +1,27 @@
-# Owner: Hermes Labs - https://hermes-labs.ai
-
 # jailbreak-bench
 
-> Automated jailbreak testing CLI for LLM endpoints. 45 known-refused attack patterns across 8 categories, deterministic keyword scorer (no LLM calls), 251 offline tests. Built by Hermes Labs as a regression baseline for LLM safety audits and EU AI Act Article 15 robustness testing.
+Deterministic jailbreak regression benchmark for LLM endpoints.
 
-jailbreak-bench is a single-turn benchmark framework. You pass a model ID and payload, it runs the attack battery, and it returns a `BenchResult` classifying each response as REFUSED, PARTIAL, or COMPLIED. A model that refuses all 45 attacks is the baseline; a regression surfaces as a drop in refusal rate.
+Use this repo when you need to:
+- rerun known jailbreak attempts after a prompt or model change
+- compare refusal rates across releases
+- save markdown or JSON evidence for audit trails
 
-The product is the negative-result corpus: patterns that should always be refused. Run it before shipping a new model, after a prompt change, or on a schedule.
+Primary CLI:
+- `jailbreak-bench --demo`
+- `jailbreak-bench --dry-run`
+- `jailbreak-bench --model <model> --api-key $ANTHROPIC_API_KEY`
 
-Part of the Hermes Labs AI Audit Toolkit (jailbreak-bench, rule-audit, colony-probe).
+Outputs:
+- per-attack verdicts
+- refusal, partial, and compliance counts
+- category breakdown
+- markdown or JSON report
 
-## Core docs
+Do not use this repo as:
+- proof against novel jailbreaks
+- a multi-turn red-team harness
+- a semantic judge for edge cases without human review
 
-- [README](README.md): install, quickstart, CLI reference, scorer overview.
-- [SPEC](SPEC.md): data-model and public-function contracts. Source of truth.
-- [ROADMAP](ROADMAP.md): v0.1 shipped, v0.2 multi-turn, v0.3 SARIF/JUnit, v1.0 SaaS.
-- [CLAUDE](CLAUDE.md): architecture + dev-workflow doc for AI agents.
-- [AGENTS](AGENTS.md): how coding agents should extend the repo.
-- [CONTRIBUTING](CONTRIBUTING.md): add attacks, extend scorer, run tests.
-- [CHANGELOG](CHANGELOG.md): version history.
-- [SECURITY](SECURITY.md): responsible disclosure policy.
-
-## Key source files
-
-- [jailbreak_bench/__init__.py](jailbreak_bench/__init__.py): public API exports.
-- [jailbreak_bench/attacks.py](jailbreak_bench/attacks.py): 45 attack dataclasses, 8 categories.
-- [jailbreak_bench/runner.py](jailbreak_bench/runner.py): `run_bench()` entry point.
-- [jailbreak_bench/scorer.py](jailbreak_bench/scorer.py): deterministic keyword scorer.
-- [jailbreak_bench/prescan.py](jailbreak_bench/prescan.py): regex prompt-injection prescan.
-- [jailbreak_bench/conversation_integrity.py](jailbreak_bench/conversation_integrity.py): history-fabrication detector.
-- [jailbreak_bench/cli.py](jailbreak_bench/cli.py): argparse CLI.
-
-## Install
-
-```
-pip install jailbreak-bench
-```
-
-## Smoke test (no API key)
-
-```
-jailbreak-bench --dry-run
-```
-
-## Related
-
-- Hermes Labs: https://hermes-labs.ai
-- Sibling: `rule-audit` (static prompt analyzer)
-- Sibling: `colony-probe` (multi-turn extraction)
+Key success condition:
+- the same attack corpus and response text produce the same score and report shape
