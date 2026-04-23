@@ -81,7 +81,7 @@ Specifically the "substantial modification" trigger - you need evidence that a m
 A refusal-rate in git is that evidence.
 
 **11/**
-Repo: github.com/roli-lpci/jailbreak-bench
+Repo: github.com/hermes-labs-ai/jailbreak-bench
 Homepage: hermes-labs.ai
 
 Feedback welcome, especially on:

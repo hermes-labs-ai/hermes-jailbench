@@ -31,6 +31,6 @@ Scoring is keyword-based (no second LLM call to judge). Fast, deterministic, aud
 - `rule-audit` - static linter for system prompts, no LLM needed
 - `colony-probe` - multi-turn extraction testing (the "ant colony" attack - 20 innocent questions reconstruct a system prompt)
 
-Repo: https://github.com/roli-lpci/jailbreak-bench (MIT)
+Repo: https://github.com/hermes-labs-ai/jailbreak-bench (MIT)
 
 Happy to answer questions about the attack bank design, scoring decisions, or the hackathon methodology behind the corpus.

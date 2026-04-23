@@ -26,5 +26,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/roli-lpci/jailbreak-bench/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/roli-lpci/jailbreak-bench/releases/tag/v0.1.0
+[Unreleased]: https://github.com/hermes-labs-ai/jailbreak-bench/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/hermes-labs-ai/jailbreak-bench/releases/tag/v0.1.0

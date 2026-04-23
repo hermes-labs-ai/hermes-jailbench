@@ -13,8 +13,8 @@ Pre-ship gate: **10/10 PASS**. No waivers.
 ## Roli's remaining steps (ordered)
 1. Read `_launch/outreach/hn-show.md`, `_launch/outreach/linkedin.md` (250-word variant), `_launch/outreach/blog-post.md` once for voice.
 2. `cd` into the repo and run `bash _launch/gh-metadata.sh` AFTER public-flip (not before - description and topics get indexed immediately).
-3. PyPI Trusted Publishing: log in to pypi.org, reserve project `jailbreak-bench`, add trusted publisher (repo `roli-lpci/jailbreak-bench`, workflow `release.yml`, environment `pypi`). In GitHub: Settings -> Environments -> add `pypi`.
-4. Flip repo public: `gh repo edit roli-lpci/jailbreak-bench --visibility public --accept-visibility-change-consequences`.
+3. PyPI Trusted Publishing: log in to pypi.org, reserve project `jailbreak-bench`, add trusted publisher (repo `hermes-labs-ai/jailbreak-bench`, workflow `release.yml`, environment `pypi`). In GitHub: Settings -> Environments -> add `pypi`.
+4. Flip repo public: `gh repo edit hermes-labs-ai/jailbreak-bench --visibility public --accept-visibility-change-consequences`.
 5. Upload `_launch/images/social-1200x630.jpg` via GitHub Settings -> Social preview (web UI only).
 6. Run `bash _launch/release.sh` on launch day to tag v0.1.0 and trigger PyPI publish.
 7. Submit Show HN 08:00-10:00 PT Tue/Wed/Thu using `_launch/outreach/hn-show.md`. First-hour plan is inside the file.

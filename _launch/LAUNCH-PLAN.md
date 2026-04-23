@@ -18,7 +18,7 @@ T-0 is the day the repo flips public and the Show HN goes up.
 ## T+0 (launch day)
 - **Gate**: Tuesday, Wednesday, or Thursday. 08:00-10:00 PT window. Roli at a keyboard for the next 2 hours.
 - **Actions** in order:
-  1. Flip repo public: `gh repo edit roli-lpci/jailbreak-bench --visibility public --accept-visibility-change-consequences`.
+  1. Flip repo public: `gh repo edit hermes-labs-ai/jailbreak-bench --visibility public --accept-visibility-change-consequences`.
   2. Upload `_launch/images/social-1200x630.jpg` via GitHub Settings -> Social preview (web UI only).
   3. Run `_launch/gh-metadata.sh`.
   4. Tag v0.1.0 and push, watch the release workflow land the wheel on PyPI.

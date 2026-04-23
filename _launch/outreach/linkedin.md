@@ -40,7 +40,7 @@ For EU AI Act operators: this is Article 15 (accuracy and robustness testing) to
 
 Part of the Hermes Labs AI Audit Toolkit: `rule-audit` (static prompt linting) and `colony-probe` (extraction testing) ship alongside.
 
-github.com/roli-lpci/jailbreak-bench
+github.com/hermes-labs-ai/jailbreak-bench
 hermes-labs.ai
 
 ---
@@ -84,6 +84,6 @@ What I want feedback on:
 - Scoring heuristics (what false positive / false negative patterns do you see?)
 - SARIF schema for the CI-gate use case
 
-Repo: github.com/roli-lpci/jailbreak-bench
+Repo: github.com/hermes-labs-ai/jailbreak-bench
 Homepage: hermes-labs.ai
 Reach out: rbosch@hermes-labs.ai

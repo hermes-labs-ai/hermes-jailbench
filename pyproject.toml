@@ -44,10 +44,10 @@ dev = [
 hermes-jailbench = "hermes_jailbench.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/roli-lpci/jailbreak-bench"
-Documentation = "https://github.com/roli-lpci/jailbreak-bench#readme"
-Repository = "https://github.com/roli-lpci/jailbreak-bench"
-Issues = "https://github.com/roli-lpci/jailbreak-bench/issues"
+Homepage = "https://github.com/hermes-labs-ai/jailbreak-bench"
+Documentation = "https://github.com/hermes-labs-ai/jailbreak-bench#readme"
+Repository = "https://github.com/hermes-labs-ai/jailbreak-bench"
+Issues = "https://github.com/hermes-labs-ai/jailbreak-bench/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["hermes_jailbench"]

@@ -5,7 +5,7 @@ Thanks for your interest. Short version: we run pytest. That is the bar. If your
 ## Setup
 
 ```bash
-git clone https://github.com/roli-lpci/jailbreak-bench
+git clone https://github.com/hermes-labs-ai/jailbreak-bench
 cd jailbreak-bench
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"

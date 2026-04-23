@@ -41,7 +41,7 @@ Do not use `hermes-jailbench` as proof that a model is safe against novel attack
 [![PyPI version](https://img.shields.io/pypi/v/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
 [![Python versions](https://img.shields.io/pypi/pyversions/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/roli-lpci/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/roli-lpci/hermes-jailbench/actions/workflows/ci.yml)
+[![Tests](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 Built by [Hermes Labs](https://hermes-labs.ai).
@@ -57,7 +57,7 @@ pip install hermes-jailbench
 Or from source:
 
 ```bash
-git clone https://github.com/roli-lpci/hermes-jailbench
+git clone https://github.com/hermes-labs-ai/hermes-jailbench
 cd hermes-jailbench
 pip install -e ".[dev]"
 ```
@@ -182,7 +182,7 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Keyword scorer, not a judge.** The scorer is pure-Python substring matching — fast and deterministic, but it has false negatives on elaborate indirect compliance and false positives on verbose refusals that quote attacker language. For ambiguous cases use `--include-responses` and eyeball the output.
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
-- **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool. See our sibling [`colony-probe`](https://github.com/roli-lpci/colony-probe) for conversation-level probing.
+- **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool. See our sibling [`colony-probe`](https://github.com/hermes-labs-ai/colony-probe) for conversation-level probing.
 - **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
@@ -219,23 +219,53 @@ All tests run without API calls.
 
 ---
 
-## Road to SaaS
+## Roadmap
 
-This CLI is the foundation for a hosted red-team-as-a-service product:
+Planned OSS work on this package:
 
 1. **v0.1 (current)**: CLI, 37 attacks, Anthropic SDK
 2. **v0.2**: OpenAI + local Ollama endpoint support
-3. **v0.3**: Web dashboard, shareable report URLs
-4. **v1.0**: Continuous monitoring (run nightly, alert on regressions), custom attack library, team workspaces
-5. **SaaS**: Per-model safety scorecards, EU AI Act Article 9 compliance reports, enterprise red-team service
+3. **v0.3**: Shareable JSON reports + diff tool for cross-version regression
+4. **v1.0**: Continuous-regression runner (nightly CI, alert on refusal-rate drop), expandable attack library
 
-The negative-result corpus (every known pattern refused) is itself a product — it establishes a baseline for measuring model safety improvements and regressions across releases.
+The package stays MIT, fully free, no hosted tier. The negative-result corpus (every known pattern refused) is itself an asset — it establishes a baseline for measuring model safety improvements and regressions across releases. If you want EU AI Act Article 9 compliance reports or an enterprise red-team engagement delivered as a report, that's the [Hermes Labs audit practice](https://hermes-labs.ai), not a SaaS version of this tool.
 
 ---
 
 ## License
 
 MIT — Hermes Labs
+
+---
+
+## About Hermes Labs
+
+[Hermes Labs](https://hermes-labs.ai) builds AI audit infrastructure for enterprise AI systems — EU AI Act readiness, ISO 42001 evidence bundles, continuous compliance monitoring, agent-level risk testing. We work with teams shipping AI into regulated environments.
+
+**Our OSS philosophy — read this if you're deciding whether to depend on us:**
+
+- **Everything we release is free, forever.** MIT or Apache-2.0. No "open core," no SaaS tier upsell, no paid version with the features you actually need. You can run this repo commercially, without talking to us.
+- **We open-source our own infrastructure.** The tools we release are what Hermes Labs uses internally — we don't publish demo code, we publish production code.
+- **We sell audit work, not licenses.** If you want an ANNEX-IV pack, an ISO 42001 evidence bundle, gap analysis against the EU AI Act, or agent-level red-teaming delivered as a report, that's at [hermes-labs.ai](https://hermes-labs.ai). If you just want the code to run it yourself, it's right here.
+
+**The Hermes Labs OSS audit stack** (public, production-grade, no SaaS):
+
+**Static audit** (before deployment)
+- [**lintlang**](https://github.com/hermes-labs-ai/lintlang) — Static linter for AI agent configs, tool descriptions, system prompts. Zero-LLM CI gate. `pip install lintlang`
+- [**rule-audit**](https://github.com/hermes-labs-ai/rule-audit) — Static prompt audit — contradictions, coverage gaps, priority ambiguities
+- [**scaffold-lint**](https://github.com/hermes-labs-ai/scaffold-lint) — Scaffold budget + technique stacking (flags `SCAFFOLD_TOO_LONG`, `SCAFFOLD_STACKING` when multiple scaffold techniques are mixed)
+- [**intent-verify**](https://github.com/hermes-labs-ai/intent-verify) — Repo intent verification + spec-drift checks
+
+**Runtime observability** (while the agent runs)
+- [**little-canary**](https://github.com/hermes-labs-ai/little-canary) — Prompt injection detection via sacrificial canary-model probes
+- [**suy-sideguy**](https://github.com/hermes-labs-ai/suy-sideguy) — Runtime policy guard — user-space enforcement + forensic reports
+- [**colony-probe**](https://github.com/hermes-labs-ai/colony-probe) — Prompt confidentiality audit — detects system-prompt reconstruction
+
+**Regression & scoring** (to prove what changed)
+- [**agent-convergence-scorer**](https://github.com/hermes-labs-ai/agent-convergence-scorer) — Score how similar N agent outputs are. `pip install agent-convergence-scorer`
+
+**Supporting infra**
+- [**claude-router**](https://github.com/hermes-labs-ai/claude-router) · [**zer0dex**](https://github.com/hermes-labs-ai/zer0dex) · [**quick-gate-python**](https://github.com/hermes-labs-ai/quick-gate-python) · [**quick-gate-js**](https://github.com/hermes-labs-ai/quick-gate-js) · [**repo-audit**](https://github.com/hermes-labs-ai/repo-audit)
 
 ---
 

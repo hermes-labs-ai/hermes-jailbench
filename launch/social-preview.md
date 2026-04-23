@@ -17,7 +17,7 @@
 > 45 patterns / 7 categories / 251 tests / 0 bypasses
 
 **Bottom (small, light gray)**:
-> Hermes Labs · MIT · github.com/roli-lpci/jailbreak-bench
+> Hermes Labs · MIT · github.com/hermes-labs-ai/jailbreak-bench
 
 ## Pollinations.ai prompt (free generator)
 
@@ -28,7 +28,7 @@ https://image.pollinations.ai/prompt/{prompt}?width=1280&height=640&nologo=true&
 
 Prompt:
 ```
-Minimal dark terminal aesthetic, matte black background with faint green scan lines. Large white mono text "jailbreak-bench" centered near top. Medium terminal-green mono text below reading "45 patterns  /  7 categories  /  251 tests  /  0 bypasses". Tiny footer in light gray mono: "Hermes Labs  ·  MIT  ·  github.com/roli-lpci/jailbreak-bench". Flat 2D, no photography, no 3D, no gradients beyond a subtle vignette. Clean, professional, zero noise. Composition leaves negative space around the central block.
+Minimal dark terminal aesthetic, matte black background with faint green scan lines. Large white mono text "jailbreak-bench" centered near top. Medium terminal-green mono text below reading "45 patterns  /  7 categories  /  251 tests  /  0 bypasses". Tiny footer in light gray mono: "Hermes Labs  ·  MIT  ·  github.com/hermes-labs-ai/jailbreak-bench". Flat 2D, no photography, no 3D, no gradients beyond a subtle vignette. Clean, professional, zero noise. Composition leaves negative space around the central block.
 ```
 
 Full Pollinations URL (paste into a browser):

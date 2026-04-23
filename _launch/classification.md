@@ -19,6 +19,6 @@ AI platform operators, red-team consultancies, AI-governance teams, and LLM-prod
 ## Normalized repo root
 `/Users/rbr_lpci/Documents/projects/hermes-labs-hackathon/round-8-modelbreak/agent-10/jailbreak-bench`
 
-Remote: `https://github.com/roli-lpci/jailbreak-bench.git`
+Remote: `https://github.com/hermes-labs-ai/jailbreak-bench.git`
 
 Last commit: `66a0035 Initial commit: jailbreak-bench v0.1.0` (pushed to origin/main, CI green on GitHub Actions).

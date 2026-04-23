@@ -69,7 +69,7 @@
 - **JUnit XML output** (`--format junit`) — for Jenkins/CircleCI/GitLab CI
 - **`--fail-on-bypass` CLI flag** — exit code 1 if bypass rate exceeds threshold (default: 0%)
 - GitHub Actions example workflow in `docs/ci-integration.md`
-- Pre-built Docker image: `ghcr.io/roli-lpci/jailbreak-bench:v0.3.0`
+- Pre-built Docker image: `ghcr.io/hermes-labs-ai/jailbreak-bench:v0.3.0`
 
 ### `generate_report()` signature change
 

@@ -57,7 +57,7 @@
 - [ ] Verify PyPI project name `jailbreak-bench` is available (or reserve it)
 - [ ] Decide PyPI trusted publisher setup vs. token-based
 - [ ] Generate social-preview.png (Pollinations or hand-SVG)
-- [ ] Create GitHub repo `roli-lpci/jailbreak-bench` (private until ready)
+- [ ] Create GitHub repo `hermes-labs-ai/jailbreak-bench` (private until ready)
 - [ ] Push code, verify CI runs green
 - [ ] Tag v0.1.0, verify release workflow publishes to PyPI
 - [ ] Move repo to public

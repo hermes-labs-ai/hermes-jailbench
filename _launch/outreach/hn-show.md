@@ -29,7 +29,7 @@ What it isn't:
 
 Sibling tools in the Hermes Labs AI Audit Toolkit: `rule-audit` (static linter for system prompts, no LLM needed) and `colony-probe` (multi-turn extraction testing).
 
-Repo: https://github.com/roli-lpci/jailbreak-bench
+Repo: https://github.com/hermes-labs-ai/jailbreak-bench
 
 Happy to answer questions and take feedback on attack coverage. The next release adds OpenAI and local Ollama endpoint support.
 

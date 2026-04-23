@@ -11,7 +11,7 @@ Repo: https://github.com/corca-ai/awesome-llm-security (or similar curated list 
 **Line to insert** (alphabetical within section):
 
 ```markdown
-- [jailbreak-bench](https://github.com/roli-lpci/jailbreak-bench) - Regression test suite for LLM safety. Runs a curated battery of 45 known-refused patterns across 7 categories against any Anthropic-compatible endpoint and reports refusal/partial/compliance rates. Pure-Python keyword scorer, 251 tests, MIT. Part of the Hermes Labs AI Audit Toolkit.
+- [jailbreak-bench](https://github.com/hermes-labs-ai/jailbreak-bench) - Regression test suite for LLM safety. Runs a curated battery of 45 known-refused patterns across 7 categories against any Anthropic-compatible endpoint and reports refusal/partial/compliance rates. Pure-Python keyword scorer, 251 tests, MIT. Part of the Hermes Labs AI Audit Toolkit.
 ```
 
 **PR body**:
@@ -39,7 +39,7 @@ Happy to revise the line or move sections if you prefer a different placement.
 **Line to insert**:
 
 ```markdown
-- [jailbreak-bench](https://github.com/roli-lpci/jailbreak-bench) - CLI and Python library for measuring LLM resistance to 45 known-refused patterns. Designed as a regression baseline, not a one-off evaluation. MIT, pure Python.
+- [jailbreak-bench](https://github.com/hermes-labs-ai/jailbreak-bench) - CLI and Python library for measuring LLM resistance to 45 known-refused patterns. Designed as a regression baseline, not a one-off evaluation. MIT, pure Python.
 ```
 
 ---
@@ -53,7 +53,7 @@ Happy to revise the line or move sections if you prefer a different placement.
 **Line to insert**:
 
 ```markdown
-- [jailbreak-bench](https://github.com/roli-lpci/jailbreak-bench) - Pytest-shaped regression baseline for LLM safety. Curated corpus of 45 known-refused patterns. Built from a weekend hackathon negative-result corpus. Part of the Hermes Labs AI Audit Toolkit.
+- [jailbreak-bench](https://github.com/hermes-labs-ai/jailbreak-bench) - Pytest-shaped regression baseline for LLM safety. Curated corpus of 45 known-refused patterns. Built from a weekend hackathon negative-result corpus. Part of the Hermes Labs AI Audit Toolkit.
 ```
 
 ---

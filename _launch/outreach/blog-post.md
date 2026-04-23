@@ -53,7 +53,7 @@ The trade-off: it has a false-negative rate on elaborate indirect compliance. Th
 
 Together they're the dynamic and static halves of LLM safety testing.
 
-Repo: https://github.com/roli-lpci/jailbreak-bench
+Repo: https://github.com/hermes-labs-ai/jailbreak-bench
 License: MIT
 Homepage: https://hermes-labs.ai
 
