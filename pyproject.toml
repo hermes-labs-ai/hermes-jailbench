@@ -9,7 +9,7 @@ description = "Jailbreak regression benchmark for LLM endpoints with repeatable 
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "Rolando Bosch", email = "rbosch@lpci.ai" }
+    { name = "Rolando Bosch", email = "roli@hermes-labs.ai" }
 ]
 maintainers = [
     { name = "Hermes Labs", email = "roli@hermes-labs.ai" }
