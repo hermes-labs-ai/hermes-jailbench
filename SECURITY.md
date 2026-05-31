@@ -2,7 +2,7 @@
 
 ## Scope
 
-`jailbreak-bench` is a defensive tool: a regression test suite for measuring LLM resistance to known refused patterns. It is intended for use by:
+`hermes-jailbench` is a defensive tool: a regression test suite for measuring LLM resistance to known refused patterns. It is intended for use by:
 
 - Developers testing their own deployed models before production
 - Red-team consultancies operating under signed engagement letters

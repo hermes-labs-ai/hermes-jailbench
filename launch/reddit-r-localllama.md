@@ -1,6 +1,6 @@
 # r/LocalLLaMA post draft
 
-**Title**: [Tool] jailbreak-bench — regression test suite for LLM safety (45 patterns, works on any Anthropic endpoint today, Ollama support next)
+**Title**: [Tool] hermes-jailbench — regression test suite for LLM safety (45 patterns, works on any Anthropic endpoint today, Ollama support next)
 
 **Body**:
 
@@ -9,16 +9,16 @@ Built this as the output of a weekend model-break hackathon. 16 agents threw eve
 Now it's a pip-installable CLI:
 
 ```bash
-pip install jailbreak-bench
+pip install hermes-jailbench
 
 # Print all 45 attacks without calling any API
-jailbreak-bench --dry-run
+hermes-jailbench --dry-run
 
 # List categories
-jailbreak-bench --list-categories
+hermes-jailbench --list-categories
 
 # Live run (needs an API key)
-jailbreak-bench --model claude-haiku-4-5 --api-key $KEY --output report.md
+hermes-jailbench --model claude-haiku-4-5 --api-key $KEY --output report.md
 ```
 
 Point is: if you're running a model locally and want a regression signal on safety, this gives you a deterministic number you can re-check on every model update. Same patterns, same scoring heuristics, same format.
@@ -31,6 +31,6 @@ Scoring is keyword-based (no second LLM call to judge). Fast, deterministic, aud
 - `rule-audit` — static linter for system prompts, no LLM needed
 - `colony-probe` — multi-turn extraction testing (the "ant colony" attack — 20 innocent questions reconstruct a system prompt)
 
-Repo: https://github.com/hermes-labs-ai/jailbreak-bench (MIT)
+Repo: https://github.com/hermes-labs-ai/hermes-jailbench (MIT)
 
 Happy to answer questions about the attack bank design, scoring decisions, or the hackathon methodology behind the corpus.

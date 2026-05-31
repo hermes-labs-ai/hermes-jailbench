@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for jailbreak-bench
+about: Suggest an idea for hermes-jailbench
 title: "[feature] "
 labels: enhancement
 ---

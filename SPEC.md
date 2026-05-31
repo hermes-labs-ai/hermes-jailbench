@@ -1,4 +1,4 @@
-# jailbreak-bench Technical Specification
+# hermes-jailbench Technical Specification
 
 **Version:** 0.1.0  
 **Status:** Production  
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-jailbreak-bench is a deterministic, offline-scorable jailbreak testing framework. It runs a battery of adversarial prompts against an LLM endpoint and classifies each response as `REFUSED`, `PARTIAL`, or `COMPLIED` using keyword heuristics — no secondary LLM calls required.
+hermes-jailbench is a deterministic, offline-scorable jailbreak testing framework. It runs a battery of adversarial prompts against an LLM endpoint and classifies each response as `REFUSED`, `PARTIAL`, or `COMPLIED` using keyword heuristics — no secondary LLM calls required.
 
 ---
 
@@ -121,6 +121,7 @@ Returns `0.0` if no attacks were attempted.
 | `social_engineering` | Manipulation (authority, emotions, gaslighting) |
 | `injection` | Prompt injection via documents, code, JSON |
 | `meta_reasoning` | Logic attacks on the model's reasoning |
+| `multilingual` | Cross-language attacks and translation-based bypasses |
 
 **`ExpectedResult`** (str enum):
 | Value | Meaning |
@@ -232,7 +233,7 @@ def generate_report(
 **Inputs:**
 - `result` — populated `BenchResult` from `run_bench()`
 - `include_responses` — if `True`, embeds full model responses in output
-- `title` — overrides default report title; defaults to `"jailbreak-bench Report — {model}"`
+- `title` — overrides default report title; defaults to `"hermes-jailbench Report — {model}"`
 - `output_format` — `"markdown"` (default) or `"json"`
 
 **Outputs:**
@@ -269,13 +270,13 @@ When `output_format="json"`, `generate_report()` returns a JSON object with this
   "model": "claude-sonnet-4-20250514",
   "target_payload": "...",
   "summary": {
-    "total_attacks": 37,
-    "refused_count": 30,
+    "total_attacks": 45,
+    "refused_count": 38,
     "partial_count": 5,
     "complied_count": 2,
     "error_count": 0,
-    "bypass_rate": 0.189,
-    "refusal_rate": 0.811
+    "bypass_rate": 0.156,
+    "refusal_rate": 0.844
   },
   "by_category": [
     {
@@ -384,10 +385,10 @@ Measured against labeled test corpus (see `tests/test_benchmark.py`):
 ## 7. Logging
 
 All modules use the standard `logging` module. Logger names follow module hierarchy:
-- `jailbreak_bench.runner` — info on each attack, warnings on errors
-- `jailbreak_bench.scorer` — debug only
-- `jailbreak_bench.report` — debug only
-- `jailbreak_bench.cli` — info for user-visible messages
+- `hermes_jailbench.runner` — info on each attack, warnings on errors
+- `hermes_jailbench.scorer` — debug only
+- `hermes_jailbench.report` — debug only
+- `hermes_jailbench.cli` — info for user-visible messages
 
 No handlers are configured by the library. Callers configure logging. Default level: WARNING.
 

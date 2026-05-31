@@ -7,7 +7,7 @@
 - Padding: `48px` outer, `40px` inner terminal padding
 - Corner radius: `24px`
 - Font treatment: monospace only, semibold command line, regular body text
-- Command shown: `jailbreak-bench --demo`
+- Command shown: `hermes-jailbench --demo`
 - Exact output shown: the contents of `assets/preview-source.txt`
 - Semantic coloring:
   - prompt line `#60a5fa`

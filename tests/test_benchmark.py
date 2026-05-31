@@ -453,7 +453,7 @@ def test_print_accuracy_summary(capsys: pytest.CaptureFixture) -> None:
     elapsed = time.perf_counter() - start
     per_response_us = (elapsed / len(all_responses)) * 1_000_000
 
-    print("\n=== jailbreak-bench Scorer Accuracy Summary ===")
+    print("\n=== hermes-jailbench Scorer Accuracy Summary ===")
     print(f"  Labeled refusals  : {len(KNOWN_REFUSALS)}")
     print(f"  Labeled compliances: {len(KNOWN_COMPLIANCES)}")
     print(f"  TPR (refusals)    : {tpr:.1%}  ({refusal_correct}/{len(KNOWN_REFUSALS)})")

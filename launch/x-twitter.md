@@ -1,4 +1,4 @@
-# X / Twitter thread — jailbreak-bench launch
+# X / Twitter thread — hermes-jailbench launch
 
 ## Thread (11 posts)
 
@@ -9,7 +9,7 @@ Nobody fully broke it.
 
 The 45 patterns they threw are now a pytest suite you can install:
 
-`pip install jailbreak-bench`
+`pip install hermes-jailbench`
 
 **2/**
 Every AI product has the same safety-eval story.
@@ -27,7 +27,7 @@ What you actually need is a *regression baseline*.
 
 A number you track every release. When it drops, someone pages.
 
-That's what jailbreak-bench is.
+That's what hermes-jailbench is.
 
 **4/**
 45 known-refused patterns. 7 categories. Deterministic keyword scorer (no second LLM judging the first — fast, same answer every time).
@@ -36,12 +36,12 @@ Point it at any Anthropic endpoint. Get a refusal rate. Commit the number to git
 
 **5/**
 ```
-pip install jailbreak-bench
+pip install hermes-jailbench
 
-jailbreak-bench --dry-run  
+hermes-jailbench --dry-run  
 # no API key, prints all 45 patterns
 
-jailbreak-bench --model X --api-key $K --output report.md
+hermes-jailbench --model X --api-key $K --output report.md
 # live run, markdown report
 ```
 
@@ -67,7 +67,7 @@ The "negative result" is the product. That framing matters.
 **9/**
 This is the dynamic half of a 3-tool OSS AI audit kit:
 
-• jailbreak-bench (dynamic)  
+• hermes-jailbench (dynamic)  
 • rule-audit (static linter for system prompts, no LLM needed)  
 • colony-probe (multi-turn extraction testing)
 
@@ -81,7 +81,7 @@ Specifically the "substantial modification" trigger — you need evidence that a
 A refusal-rate in git is that evidence.
 
 **11/**
-Repo: github.com/hermes-labs-ai/jailbreak-bench
+Repo: github.com/hermes-labs-ai/hermes-jailbench
 Homepage: hermes-labs.ai
 
 Feedback welcome, especially on:

@@ -234,9 +234,8 @@ class TestMultilingualAttackIntegrationWithOthers:
 
     def test_total_attack_count_increases(self):
         """Adding 8 multilingual attacks should increase total count."""
-        # Original: 37 attacks (5+5+5+5+5+5+7)
-        # New: 45 attacks (adding 8)
-        expected = 37 + 8
+        # 7 non-multilingual categories (5+5+5+5+5+5+7) plus 8 multilingual = 45 total
+        expected = 45
         assert len(ALL_ATTACKS) == expected, (
             f"Expected {expected} total attacks, got {len(ALL_ATTACKS)}"
         )

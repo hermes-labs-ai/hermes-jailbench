@@ -16,15 +16,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `generate_report()` and `save_report()` with markdown and JSON output formats.
 - `prescan` module: regex-based prompt-injection prescan for input hardening.
 - `conversation_integrity` module: history-fabrication and gaslighting detector with suggested-response generation.
-- Argparse CLI (`jailbreak-bench`) with `--dry-run`, category and attack-name filtering, `--list-attacks`, `--list-categories`, `--include-responses`, configurable delay and max-tokens.
+- Argparse CLI (`hermes-jailbench`) with `--dry-run`, category and attack-name filtering, `--list-attacks`, `--list-categories`, `--include-responses`, configurable delay and max-tokens.
 - PEP 561 `py.typed` marker; full type annotations on the public API.
 - 251 offline tests (no API key required).
 - GitHub Actions CI across Python 3.10, 3.11, 3.12: pytest, coverage, ruff, mypy, build check.
-- MIT license. Packaged with hatchling, published to PyPI as `jailbreak-bench`.
+- MIT license. Packaged with hatchling, published to PyPI as `hermes-jailbench`.
 
 ### Notes
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/jailbreak-bench/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/hermes-labs-ai/jailbreak-bench/releases/tag/v0.1.0
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.1.0

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a problem with jailbreak-bench
+about: Report a problem with hermes-jailbench
 title: "[bug] "
 labels: bug
 ---
@@ -12,7 +12,7 @@ A clear and concise description of the bug.
 The exact command or code that triggers the issue:
 
 ```bash
-jailbreak-bench --dry-run ...
+hermes-jailbench --dry-run ...
 ```
 
 **What you expected to happen**
@@ -21,7 +21,7 @@ jailbreak-bench --dry-run ...
 Include the error message and stack trace if any.
 
 **Environment**
-- `jailbreak-bench` version: (run `pip show jailbreak-bench`)
+- `hermes-jailbench` version: (run `pip show hermes-jailbench`)
 - Python version: (run `python --version`)
 - OS: macOS / Linux / Windows + version
 
