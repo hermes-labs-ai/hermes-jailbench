@@ -1,4 +1,4 @@
-# jailbreak-bench — LAUNCH-READY
+# hermes-jailbench — LAUNCH-READY
 
 **Date**: 2026-04-17
 **Version**: 0.1.0
@@ -54,10 +54,10 @@
 
 - [ ] Review all launch/* drafts for voice (Roli should read and redline)
 - [ ] Confirm `hermes-labs.ai` contact emails are routable: `conduct@`, `security@`
-- [ ] Verify PyPI project name `jailbreak-bench` is available (or reserve it)
+- [ ] Verify PyPI project name `hermes-jailbench` is available (or reserve it)
 - [ ] Decide PyPI trusted publisher setup vs. token-based
 - [ ] Generate social-preview.png (Pollinations or hand-SVG)
-- [ ] Create GitHub repo `hermes-labs-ai/jailbreak-bench` (private until ready)
+- [ ] Create GitHub repo `hermes-labs-ai/hermes-jailbench` (private until ready)
 - [ ] Push code, verify CI runs green
 - [ ] Tag v0.1.0, verify release workflow publishes to PyPI
 - [ ] Move repo to public

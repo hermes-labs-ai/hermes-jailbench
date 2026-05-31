@@ -1,21 +1,37 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "hermes-jailbench: A regression test suite for LLM safety baselines"
-abstract: "Open-source CLI and Python library for running a curated battery of known refused-pattern tests against LLM endpoints. Produces structured reports of refusal, partial, and compliance outcomes. Designed as a defensive baseline for measuring model safety regressions across releases."
+message: "If you use hermes-jailbench, please cite it as below."
+title: "hermes-jailbench: a jailbreak regression benchmark for LLM endpoints"
+abstract: >-
+  hermes-jailbench is a jailbreak regression benchmark that runs a repeatable
+  battery of known-pattern attacks against an LLM endpoint and returns
+  deterministic refusal/partial/compliance scores, so teams can detect when a
+  model or prompt change silently weakens established refusals. It uses a
+  zero-LLM keyword scorer, supports a no-key dry-run and demo, and is a
+  regression baseline for known patterns rather than a novel-attack red-team.
 type: software
 authors:
-  - family-names: Bosch
-    given-names: Rolando
-    affiliation: Hermes Labs
-    email: rbosch@hermes-labs.ai
-version: 0.1.0
-date-released: 2026-04-17
+  - family-names: "Bosch Rodriguez"
+    given-names: "Rolando"
+    orcid: "https://orcid.org/0009-0005-4896-1112"
+    affiliation: "Hermes Labs"
 license: MIT
-repository-code: "https://github.com/roli-lpci/jailbreak-bench"
-url: "https://hermes-labs.ai"
+repository-code: "https://github.com/hermes-labs-ai/hermes-jailbench"
+url: "https://github.com/hermes-labs-ai/hermes-jailbench"
 keywords:
-  - llm-safety
-  - red-team
-  - regression-testing
-  - ai-audit
-  - eu-ai-act
+  - "AI reliability"
+  - "LLM reliability"
+  - "behavioral evaluation"
+  - "silent failure modes"
+  - "jailbreak benchmark"
+  - "regression testing"
+  - "prompt security"
+  - "LLM red-teaming"
+version: "0.1.0"
+references:
+  - type: article
+    title: "A Taxonomy of Epistemic Failure Modes in Large Language Models"
+    authors:
+      - family-names: "Bosch Rodriguez"
+        given-names: "Rolando"
+        orcid: "https://orcid.org/0009-0005-4896-1112"
+    doi: "10.5281/zenodo.19042469"

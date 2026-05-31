@@ -19,7 +19,7 @@ Step 5 is the interesting one. The reason it happens is that most "AI safety eva
 
 What I wanted was a regression baseline. A pytest-shaped number I could track over time — "refusal rate on the 45 known patterns, for this model, on this date." If the number drops, someone paged.
 
-This is `jailbreak-bench`.
+This is `hermes-jailbench`.
 
 ## The negative-result corpus
 
@@ -30,13 +30,13 @@ That's a corpus. Every pattern is a known-refused on a well-aligned model. You p
 ## How it works
 
 ```bash
-pip install jailbreak-bench
+pip install hermes-jailbench
 
 # Inspect the bank without calling any API
-jailbreak-bench --dry-run
+hermes-jailbench --dry-run
 
 # Run against a model
-jailbreak-bench --model claude-haiku-4-5 --api-key $KEY --output report.md
+hermes-jailbench --model claude-haiku-4-5 --api-key $KEY --output report.md
 ```
 
 The scorer is pure-Python keyword heuristics — no second LLM call to judge the first one. That matters because:
@@ -55,14 +55,14 @@ The trade-off: it has a false-negative rate on elaborate indirect compliance. Th
 
 ## The rest of the toolkit
 
-`jailbreak-bench` is one of three OSS tools Hermes Labs is shipping this week:
+`hermes-jailbench` is one of three OSS tools Hermes Labs is shipping this week:
 
 - **rule-audit** — static linter for system prompts. Finds contradictions, coverage gaps, priority ambiguities. No LLM calls.
 - **colony-probe** — multi-turn probing tool that tests whether your system prompt structure leaks through innocuous conversational questions.
 
 Together they're the dynamic and static halves of LLM safety testing.
 
-Repo: https://github.com/hermes-labs-ai/jailbreak-bench
+Repo: https://github.com/hermes-labs-ai/hermes-jailbench
 License: MIT
 Homepage: https://hermes-labs.ai
 

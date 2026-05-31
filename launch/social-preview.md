@@ -11,13 +11,13 @@
 ## Copy layout
 
 **Top (large, white)**:
-> jailbreak-bench
+> hermes-jailbench
 
 **Middle (medium, green mono)**:
 > 45 patterns / 7 categories / 251 tests / 0 bypasses
 
 **Bottom (small, light gray)**:
-> Hermes Labs · MIT · github.com/hermes-labs-ai/jailbreak-bench
+> Hermes Labs · MIT · github.com/hermes-labs-ai/hermes-jailbench
 
 ## Pollinations.ai prompt (free generator)
 
@@ -28,13 +28,13 @@ https://image.pollinations.ai/prompt/{prompt}?width=1280&height=640&nologo=true&
 
 Prompt:
 ```
-Minimal dark terminal aesthetic, matte black background with faint green scan lines. Large white mono text "jailbreak-bench" centered near top. Medium terminal-green mono text below reading "45 patterns  /  7 categories  /  251 tests  /  0 bypasses". Tiny footer in light gray mono: "Hermes Labs  ·  MIT  ·  github.com/hermes-labs-ai/jailbreak-bench". Flat 2D, no photography, no 3D, no gradients beyond a subtle vignette. Clean, professional, zero noise. Composition leaves negative space around the central block.
+Minimal dark terminal aesthetic, matte black background with faint green scan lines. Large white mono text "hermes-jailbench" centered near top. Medium terminal-green mono text below reading "45 patterns  /  7 categories  /  251 tests  /  0 bypasses". Tiny footer in light gray mono: "Hermes Labs  ·  MIT  ·  github.com/hermes-labs-ai/hermes-jailbench". Flat 2D, no photography, no 3D, no gradients beyond a subtle vignette. Clean, professional, zero noise. Composition leaves negative space around the central block.
 ```
 
 Full Pollinations URL (paste into a browser):
 
 ```
-https://image.pollinations.ai/prompt/Minimal%20dark%20terminal%20aesthetic%2C%20matte%20black%20background%20with%20faint%20green%20scan%20lines.%20Large%20white%20mono%20text%20%22jailbreak-bench%22%20centered%20near%20top.%20Medium%20terminal-green%20mono%20text%20below%20reading%20%2245%20patterns%20%2F%207%20categories%20%2F%20251%20tests%20%2F%200%20bypasses%22.%20Tiny%20footer%20in%20light%20gray%20mono%3A%20%22Hermes%20Labs%20%C2%B7%20MIT%20%C2%B7%20github.com%2Froli-lpci%2Fjailbreak-bench%22.%20Flat%202D%2C%20no%20photography%2C%20no%203D%2C%20no%20gradients%20beyond%20a%20subtle%20vignette.%20Clean%2C%20professional%2C%20zero%20noise.?width=1280&height=640&nologo=true&seed=4517
+https://image.pollinations.ai/prompt/Minimal%20dark%20terminal%20aesthetic%2C%20matte%20black%20background%20with%20faint%20green%20scan%20lines.%20Large%20white%20mono%20text%20%22hermes-jailbench%22%20centered%20near%20top.%20Medium%20terminal-green%20mono%20text%20below%20reading%20%2245%20patterns%20%2F%207%20categories%20%2F%20251%20tests%20%2F%200%20bypasses%22.%20Tiny%20footer%20in%20light%20gray%20mono%3A%20%22Hermes%20Labs%20%C2%B7%20MIT%20%C2%B7%20github.com%2Fhermes-labs-ai%2Fhermes-jailbench%22.%20Flat%202D%2C%20no%20photography%2C%20no%203D%2C%20no%20gradients%20beyond%20a%20subtle%20vignette.%20Clean%2C%20professional%2C%20zero%20noise.?width=1280&height=640&nologo=true&seed=4517
 ```
 
 ## Backup: hand-crafted SVG

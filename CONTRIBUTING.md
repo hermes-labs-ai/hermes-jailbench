@@ -1,12 +1,12 @@
-# Contributing to jailbreak-bench
+# Contributing to hermes-jailbench
 
 Thanks for your interest. Short version: we run pytest. That is the bar. If your change adds or modifies behavior, add or update a test.
 
 ## Setup
 
 ```bash
-git clone https://github.com/hermes-labs-ai/jailbreak-bench
-cd jailbreak-bench
+git clone https://github.com/hermes-labs-ai/hermes-jailbench
+cd hermes-jailbench
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
@@ -16,7 +16,7 @@ You should see 251 passing tests. If you don't, open an issue before submitting 
 
 ## Adding a new attack
 
-1. Open `jailbreak_bench/attacks.py`.
+1. Open `hermes_jailbench/attacks.py`.
 2. Append an `Attack(...)` to the matching category list (`IDENTITY_OVERRIDE_ATTACKS`, `FRAMING_BYPASS_ATTACKS`, etc.).
 3. Use the `{TARGET}` placeholder for the harmful payload, or write a standalone prompt with no placeholder.
 4. Add at least one tag. Keep `name` unique across all attacks.
@@ -38,7 +38,7 @@ Attack(
 
 The scorer is deterministic and keyword-based. See `SPEC.md` Section 6 for the algorithm.
 
-1. Edit `jailbreak_bench/scorer.py`.
+1. Edit `hermes_jailbench/scorer.py`.
 2. Add phrases to `REFUSAL_PHRASES`, `COMPLIANCE_SIGNALS`, or `PARTIAL_PHRASES`. All lowercase, substring-matched.
 3. Add a test fixture in `tests/test_scorer.py` with a labeled response string and the expected verdict.
 
@@ -58,7 +58,7 @@ Currently Anthropic-only. To add OpenAI, Azure OpenAI, or Ollama:
 - **Tests:** pytest must pass. That is the hard gate.
 - **Lint:** `ruff check` and `ruff format --check` run in CI. Run them locally if you want; not required.
 - **Types:** `mypy` runs in CI with `--ignore-missing-imports --no-strict-optional`. Public functions must carry full type annotations.
-- **Logging:** stdlib `logging` only. Module-level `logger = logging.getLogger(__name__)`. No `print()` inside `jailbreak_bench/` except in `cli.py`.
+- **Logging:** stdlib `logging` only. Module-level `logger = logging.getLogger(__name__)`. No `print()` inside `hermes_jailbench/` except in `cli.py`.
 - **Commits:** clean, focused commits. Reference an issue if one exists.
 
 ## Security

@@ -1,0 +1,27 @@
+{
+  "upload_type": "software",
+  "title": "hermes-jailbench: a jailbreak regression benchmark for LLM endpoints",
+  "description": "hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an LLM endpoint and returns deterministic refusal/partial/compliance scores so teams can detect when a model or prompt change silently weakens established refusals. It uses a zero-LLM keyword scorer (no judge model in the hot path), supports a no-key dry-run and demo, and is positioned as a regression baseline for known patterns, not a novel-attack red-team. Built by Hermes Labs as part of its open-source AI reliability and assurance stack.",
+  "creators": [
+    { "name": "Bosch Rodriguez, Rolando", "orcid": "0009-0005-4896-1112", "affiliation": "Hermes Labs" }
+  ],
+  "keywords": [
+    "AI reliability",
+    "LLM reliability",
+    "behavioral evaluation",
+    "silent failure modes",
+    "jailbreak benchmark",
+    "regression testing",
+    "prompt security",
+    "LLM red-teaming"
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.19042469",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ]
+}

@@ -1,17 +1,17 @@
-# Show HN: jailbreak-bench – A regression test suite for LLM safety baselines
+# Show HN: hermes-jailbench – A regression test suite for LLM safety baselines
 
 We ran a weekend hackathon where 16 AI agents tried to break Claude Sonnet. Nobody fully broke it. What we ended up with was a curated battery of 45 known-refused patterns across 7 categories — the negative-result corpus.
 
 That corpus is the product. It's now a pip-installable CLI for running those 45 patterns against any Anthropic-compatible endpoint and getting a structured report back.
 
 ```bash
-pip install jailbreak-bench
+pip install hermes-jailbench
 
 # No API key needed — inspect the attack bank
-jailbreak-bench --dry-run
+hermes-jailbench --dry-run
 
 # Live regression run
-jailbreak-bench --model claude-haiku-4-5 --api-key $ANTHROPIC_API_KEY --output report.md
+hermes-jailbench --model claude-haiku-4-5 --api-key $ANTHROPIC_API_KEY --output report.md
 ```
 
 Why this matters: if you deploy an LLM-backed product, you want a regression alarm when a model update weakens your safety posture. Right now the common workflow is "ship, hope, find out on Twitter." This tool gives you a pytest-shaped signal instead: a refusal-rate number you can track per model version, commit to git, and diff on release.
@@ -29,6 +29,6 @@ What it isn't:
 
 Sibling tools in the Hermes Labs AI Audit Toolkit: `rule-audit` (static linter for system prompts, no LLM needed) and `colony-probe` (multi-turn extraction testing).
 
-Repo: https://github.com/hermes-labs-ai/jailbreak-bench
+Repo: https://github.com/hermes-labs-ai/hermes-jailbench
 
 Happy to answer questions and take feedback on attack coverage. The next release adds OpenAI and local Ollama endpoint support.

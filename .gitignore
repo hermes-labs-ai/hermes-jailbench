@@ -74,3 +74,6 @@ logs/
 
 # GTM strategy — not for public repo
 launch/cold-email-targets.md
+
+# internal launch workspace (not shipped)
+_launch/

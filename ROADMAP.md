@@ -1,4 +1,4 @@
-# jailbreak-bench Roadmap
+# hermes-jailbench Roadmap
 
 **Product:** Automated red-team testing CLI for LLM endpoints  
 **Target users:** AI audit firms, red-team consultancies, enterprise security teams  
@@ -10,13 +10,13 @@
 
 **Theme:** Single-turn baseline benchmark
 
-- 37 single-turn attacks across 7 categories
+- 45 single-turn attacks across 8 categories
 - Keyword-based scorer (no LLM dependency for scoring)
 - Markdown report with per-attack and per-category breakdown
 - CLI with dry-run, category/attack filtering, live progress output
 - `on_result` callback for library integration
 - 58 passing tests (no API key required)
-- Published to PyPI as `jailbreak-bench`
+- Published to PyPI as `hermes-jailbench`
 
 ---
 
@@ -69,7 +69,7 @@
 - **JUnit XML output** (`--format junit`) — for Jenkins/CircleCI/GitLab CI
 - **`--fail-on-bypass` CLI flag** — exit code 1 if bypass rate exceeds threshold (default: 0%)
 - GitHub Actions example workflow in `docs/ci-integration.md`
-- Pre-built Docker image: `ghcr.io/hermes-labs-ai/jailbreak-bench:v0.3.0`
+- Pre-built Docker image: `ghcr.io/hermes-labs-ai/hermes-jailbench:v0.3.0`
 
 ### `generate_report()` signature change
 
@@ -113,7 +113,7 @@
 
 ### CLI backward compatibility
 
-`jailbreak-bench` CLI remains fully functional offline. v1.0.0 adds `--remote` flag to submit to SaaS API instead of running locally.
+`hermes-jailbench` CLI remains fully functional offline. v1.0.0 adds `--remote` flag to submit to SaaS API instead of running locally.
 
 ---
 
@@ -133,4 +133,4 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
-| v0.1.0 | 2025-Q2 | 37 attacks, keyword scorer, markdown report, 58 tests |
+| v0.1.0 | 2025-Q2 | 45 attacks, keyword scorer, markdown report |

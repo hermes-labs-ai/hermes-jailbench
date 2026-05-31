@@ -2,13 +2,13 @@
 
 ## Variant A — 100 words
 
-Shipped an open-source tool today: `jailbreak-bench`.
+Shipped an open-source tool today: `hermes-jailbench`.
 
 If you operate an LLM product, you know the problem: the safety eval you ran at launch is not the safety eval you're running on every vendor model update. This is a pytest-shaped regression baseline — 45 known-refused patterns, one command, structured report.
 
 Built during a weekend hackathon where 16 agents tried to break Claude Sonnet. Nobody fully broke it. The 45 patterns they threw are now the baseline.
 
-MIT licensed. `pip install jailbreak-bench`.
+MIT licensed. `pip install hermes-jailbench`.
 
 Next week: EU AI Act Article 15 mapping doc.
 
@@ -22,7 +22,7 @@ Every AI team I've talked to has the same safety-eval story. You do a careful ev
 
 Static safety evals age fast because nobody runs them on every release.
 
-Today I'm open-sourcing `jailbreak-bench` — a regression baseline, not an evaluation. The difference matters:
+Today I'm open-sourcing `hermes-jailbench` — a regression baseline, not an evaluation. The difference matters:
 
 - **Evaluation** = "is this model safe?" (answered once, subjective, heavy)
 - **Regression baseline** = "is this model *less* safe than it was?" (answered per release, objective, cheap)
@@ -30,8 +30,8 @@ Today I'm open-sourcing `jailbreak-bench` — a regression baseline, not an eval
 The tool runs 45 known-refused patterns against any Anthropic-compatible endpoint and reports a refusal rate. You commit the number to git. When it drops, something paged.
 
 ```
-pip install jailbreak-bench
-jailbreak-bench --model claude-haiku-4-5 --output report.md
+pip install hermes-jailbench
+hermes-jailbench --model claude-haiku-4-5 --output report.md
 ```
 
 Built out of a Hermes Labs hackathon corpus. 251 tests. Pure-Python scorer (no second LLM to judge the first). MIT license.
@@ -40,7 +40,7 @@ For EU AI Act operators: this is Article 15 (accuracy and robustness testing) to
 
 Part of the Hermes Labs AI Audit Toolkit: `rule-audit` (static prompt linting) and `colony-probe` (extraction testing) ship alongside.
 
-github.com/hermes-labs-ai/jailbreak-bench
+github.com/hermes-labs-ai/hermes-jailbench
 hermes-labs.ai
 
 ---
@@ -51,7 +51,7 @@ The dirty secret of AI product safety is that most "safety evals" are one-off ar
 
 The gap between "we evaluated this model" and "we continuously measure this model" is huge. Today I'm open-sourcing one piece of the continuous side.
 
-`jailbreak-bench` is a regression baseline for LLM safety. Here's what that means in practice:
+`hermes-jailbench` is a regression baseline for LLM safety. Here's what that means in practice:
 
 1. We ran a weekend hackathon where 16 AI agents threw every prompt-extraction and safety-bypass technique we could think of at Claude Sonnet.
 2. Nobody fully broke it. The 45 patterns they tried all got refused.
@@ -60,8 +60,8 @@ The gap between "we evaluated this model" and "we continuously measure this mode
 5. You commit the number to git. When it drops, you know something changed.
 
 ```
-pip install jailbreak-bench
-jailbreak-bench --model your-model --api-key $KEY --output baseline.md
+pip install hermes-jailbench
+hermes-jailbench --model your-model --api-key $KEY --output baseline.md
 ```
 
 Why this is the shape of the tool, not a "safety eval":
@@ -72,7 +72,7 @@ Why this is the shape of the tool, not a "safety eval":
 
 This is the dynamic half of an OSS AI audit toolkit Hermes Labs is shipping this week. The other halves:
 
-- `rule-audit` — static linter for system prompts. Finds contradictions, coverage gaps, priority ambiguities. No LLM calls, runs in milliseconds. Complements `jailbreak-bench` — `rule-audit` predicts where attacks will succeed; `jailbreak-bench` measures whether they still do.
+- `rule-audit` — static linter for system prompts. Finds contradictions, coverage gaps, priority ambiguities. No LLM calls, runs in milliseconds. Complements `hermes-jailbench` — `rule-audit` predicts where attacks will succeed; `hermes-jailbench` measures whether they still do.
 - `colony-probe` — multi-turn probing tool that tests whether your system prompt structure leaks through innocent conversational questions. The "ant colony" attack from the same hackathon.
 
 For teams preparing for EU AI Act Article 15 (accuracy and robustness), these three tools give you the artifact trail a notified body will ask for: evidence that you continuously measure your system's resistance, across both static (prompt) and dynamic (runtime) surfaces.
@@ -84,6 +84,6 @@ What I want feedback on:
 - Scoring heuristics (what false positive / false negative patterns do you see?)
 - SARIF schema for the CI-gate use case
 
-Repo: github.com/hermes-labs-ai/jailbreak-bench
+Repo: github.com/hermes-labs-ai/hermes-jailbench
 Homepage: hermes-labs.ai
 Reach out: rbosch@hermes-labs.ai

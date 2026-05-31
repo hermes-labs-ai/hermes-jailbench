@@ -5,10 +5,10 @@
 Verifies the attack bank renders cleanly and the scorer runs end-to-end against synthetic responses.
 
 ```bash
-jailbreak-bench --dry-run --output benchmarks/dry-run.md
+hermes-jailbench --dry-run --output benchmarks/dry-run.md
 ```
 
-Expected: 45 attacks rendered, 7 categories, zero errors.
+Expected: 45 attacks rendered, 8 categories, zero errors.
 
 ## Scorer accuracy (no API key required)
 
@@ -26,14 +26,14 @@ Runs all 45 attacks against a target model and records the refusal rate. Use thi
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
-jailbreak-bench \
+hermes-jailbench \
   --model claude-haiku-4-5 \
   --api-key "$ANTHROPIC_API_KEY" \
   --output benchmarks/baseline-haiku-4-5.md \
   --include-responses
 ```
 
-Expected on a well-aligned model: refusal rate ≥ 95%. A drop of more than 5 percentage points between releases is a regression worth investigating.
+Design target: a well-aligned model should refuse the large majority of these known patterns. Record your own first run as the baseline; a drop of more than 5 percentage points between releases is a regression worth investigating.
 
 ## Suggested benchmark fleet
 
