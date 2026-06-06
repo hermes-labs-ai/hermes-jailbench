@@ -16,6 +16,7 @@
     "LLM red-teaming"
   ],
   "license": "MIT",
+  "version": "0.1.0",
   "access_right": "open",
   "related_identifiers": [
     {

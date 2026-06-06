@@ -44,6 +44,8 @@ Do not use `hermes-jailbench` as proof that a model is safe against novel attack
 
 Built by [Hermes Labs](https://hermes-labs.ai).
 
+Part of the [Hermes Labs reliability stack](https://github.com/hermes-labs-ai). For multi-turn, conversation-level system-prompt probing — which is out of scope here — see the complementary sibling [`colony-probe`](https://github.com/hermes-labs-ai/colony-probe). hermes-jailbench is single-turn known-pattern regression; colony-probe is multi-turn probing. They are complementary, not duplicates.
+
 ---
 
 ## Install
