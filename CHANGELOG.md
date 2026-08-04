@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-04
+
+### Changed
+- Align the repository, Python package, and CLI under the `hermes-jailbench`
+  identity.
+- Clarify that the benchmark replays known single-turn patterns and that its
+  deterministic scorer does not establish safety against novel attacks.
+- Refresh the public README, package links, citation metadata, and preview.
+- Harden the tag-triggered PyPI workflow with immutable action pins and a
+  tag-to-package-version check.
+
+No attack catalog, scoring rule, or benchmark behavior changed.
+
 ## [0.1.0] - 2026-04-17
 
 ### Added
@@ -26,5 +39,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.1.0
