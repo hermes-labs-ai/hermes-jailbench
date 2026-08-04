@@ -1,6 +1,6 @@
 # hermes-jailbench
 
-hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an LLM endpoint and returns deterministic refusal, partial, and compliance scores you can compare across runs — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
+hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an LLM endpoint and uses deterministic keyword heuristics to classify each response as refusal, partial, or compliance — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
 
 - "We changed the system prompt and now I need to know if refusals got weaker."
 - "Our jailbreak testing lives in screenshots and anecdotes instead of something repeatable."
