@@ -109,7 +109,7 @@ def main(argv: Optional[list[str]] = None) -> None:
         "--demo",
         action="store_true",
         help=(
-            "Run a small built-in showcase: 9 attacks across 3 categories, "
+            "Run a small built-in showcase: 17 attacks across 3 categories, "
             "dry-run (no API calls, no key required). Useful for a quick "
             "end-to-end sanity check or screenshot."
         ),
