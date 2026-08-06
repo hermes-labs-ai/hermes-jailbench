@@ -44,7 +44,7 @@ Do not use `hermes-jailbench` as proof that a model is safe against novel attack
 
 Built by [Hermes Labs](https://hermes-labs.ai).
 
-Part of the [Hermes Labs reliability stack](https://github.com/hermes-labs-ai). For multi-turn, conversation-level system-prompt probing — which is out of scope here — see the complementary sibling [`colony-probe`](https://github.com/hermes-labs-ai/colony-probe). hermes-jailbench is single-turn known-pattern regression; colony-probe is multi-turn probing. They are complementary, not duplicates.
+Part of the [Hermes Labs reliability stack](https://github.com/hermes-labs-ai). Multi-turn, conversation-level system-prompt probing is out of scope here; hermes-jailbench is single-turn known-pattern regression.
 
 ---
 
@@ -182,7 +182,7 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Keyword scorer, not a judge.** The scorer is pure-Python substring matching — fast and deterministic, but it has false negatives on elaborate indirect compliance and false positives on verbose refusals that quote attacker language. For ambiguous cases use `--include-responses` and eyeball the output.
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
-- **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool. See our sibling [`colony-probe`](https://github.com/hermes-labs-ai/colony-probe) for conversation-level probing.
+- **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool.
 - **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
@@ -240,7 +240,9 @@ MIT — Hermes Labs
 
 ## About Hermes Labs
 
-Hermes Labs is an independent AI-reliability lab building open-source tools that catch silent failure modes in production AI. More at [hermes-labs.ai](https://hermes-labs.ai).
+[Hermes Labs](https://hermes-labs.ai) is an AI reliability engineering studio for product and engineering teams shipping production agents and LLM applications. We find the structural AI failures standard evals miss, then harden retrieval, memory, agents, and the language layers around production AI systems with runtime controls and defensible evidence.
+
+Browse the [open-source catalog](https://hermes-labs.ai/open-source) or contact [roli@hermes-labs.ai](mailto:roli@hermes-labs.ai).
 
 ---
 
