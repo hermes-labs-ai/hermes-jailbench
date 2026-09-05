@@ -1,0 +1,18 @@
+{
+  "@context": "https://w3id.org/codemeta/3.1",
+  "@type": "SoftwareSourceCode",
+  "name": "hermes-jailbench",
+  "description": "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring.",
+  "codeRepository": "https://github.com/hermes-labs-ai/hermes-jailbench",
+  "version": "0.1.2",
+  "license": "https://spdx.org/licenses/MIT",
+  "programmingLanguage": "Python",
+  "runtimePlatform": "Python >=3.10",
+  "identifier": [
+    "https://doi.org/10.5281/zenodo.21795796",
+    "https://pypi.org/project/hermes-jailbench/0.1.2/"
+  ],
+  "author": [{"@id": "https://orcid.org/0009-0005-4896-1112", "@type": "Person", "givenName": "Rolando", "familyName": "Bosch Rodriguez"}],
+  "url": "https://pypi.org/project/hermes-jailbench/0.1.2/",
+  "keywords": ["jailbreak benchmark", "regression testing", "prompt security", "LLM red-teaming"]
+}

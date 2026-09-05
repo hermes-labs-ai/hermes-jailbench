@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hermes-jailbench"
-version = "0.1.0"
+version = "0.1.2"
 description = "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring"
 readme = "README.md"
 license = { text = "MIT" }
@@ -48,6 +48,7 @@ Homepage = "https://github.com/hermes-labs-ai/hermes-jailbench"
 Documentation = "https://github.com/hermes-labs-ai/hermes-jailbench#readme"
 Repository = "https://github.com/hermes-labs-ai/hermes-jailbench"
 Issues = "https://github.com/hermes-labs-ai/hermes-jailbench/issues"
+Changelog = "https://github.com/hermes-labs-ai/hermes-jailbench/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["hermes_jailbench"]
