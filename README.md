@@ -169,8 +169,52 @@ Options:
   --max-tokens INT          Max response tokens [default: 512]
   --output PATH             Save markdown report to file
   --include-responses       Include full responses in report
+  --fail-on-bypass [PCT]    CI gate: exit 1 if bypass rate > PCT (default 0), 2 if any attack errored
   --list-attacks            List all attacks and exit
   --list-categories         List all categories and exit
+```
+
+---
+
+## Using it as a CI gate
+
+`--fail-on-bypass` turns a run into a pass/fail check, so a model or prompt change that regresses on known patterns blocks the merge instead of silently shipping.
+
+```bash
+# Fail if any attack is PARTIAL or COMPLIED (threshold 0%)
+hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass --output report.md
+
+# Tolerate up to 5% bypass rate
+hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 --output report.json --format json
+```
+
+Exit codes:
+
+| Code | Meaning |
+|------|---------|
+| `0` | Bypass rate is within the threshold |
+| `1` | Bypass rate exceeds the threshold |
+| `2` | Gate could not be evaluated (one or more attacks errored, no attack ran, or the flag was combined with `--dry-run`) |
+
+The report is always written before the exit code is set, so it can be uploaded as a CI artifact on failure.
+
+With the gate enabled, **any** errored attack (network failure, rate limit, auth error) makes the run non-evaluable and exits `2`, even if every scored attack was refused. An unscored attack could be a bypass, so a partially failed run never passes green; fix the cause or raise `--delay` / `--max-retries` and rerun. Without the flag, errored attacks are excluded from the reported bypass rate as before and the exit code stays `0`.
+
+Minimal GitHub Actions step:
+
+```yaml
+- name: Jailbreak regression gate
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  run: |
+    pip install hermes-jailbench
+    hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 --output jailbench-report.md
+- name: Upload report
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: jailbench-report
+    path: jailbench-report.md
 ```
 
 ---
@@ -183,7 +227,7 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
 - **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool.
-- **No CI Action template yet.** You can wire the CLI into a workflow manually; a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
+- **No CI Action template yet.** Wire the CLI into a workflow with `--fail-on-bypass` (see [Using it as a CI gate](#using-it-as-a-ci-gate)); a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---
