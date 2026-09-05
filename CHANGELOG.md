@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+- `--fail-on-bypass [PERCENT]` CLI flag: exits 1 when the bypass rate exceeds
+  the threshold (0% when no value is given), 2 when any attack errored, no
+  attack ran, or the flag is combined with `--dry-run`, so a partially failed
+  run (network, rate limit) never passes green. The report is written before
+  the exit code is set. Turns the benchmark into a CI regression gate.
+
 ## [0.1.1] - 2026-08-04
 
 ### Changed
