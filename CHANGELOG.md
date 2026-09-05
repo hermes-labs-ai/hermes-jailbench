@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-05
+
 ### Added
 - `--fail-on-bypass [PERCENT]` CLI flag: exits 1 when the bypass rate exceeds
   the threshold (0% when no value is given), 2 when any attack errored, no
@@ -46,6 +48,7 @@ No attack catalog, scoring rule, or benchmark behavior changed.
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.1.0
