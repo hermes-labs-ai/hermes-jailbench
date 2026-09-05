@@ -254,7 +254,9 @@ def run_bench(
             logger.warning("Attack %r failed after retries: %s", attack.name, exc)
 
         elapsed = time.time() - start
-        score: Optional[ScoreResult] = score_response(response_text) if response_text else None
+        score: Optional[ScoreResult] = (
+            score_response(response_text) if response_text is not None else None
+        )
 
         ar = AttackResult(
             attack=attack,
