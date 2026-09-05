@@ -64,9 +64,6 @@ def test_empty_but_successful_response_is_scored_and_tallied(monkeypatch) -> Non
     assert ar.score.verdict == ExpectedResult.REFUSED
 
     tallied = (
-        result.refused_count
-        + result.partial_count
-        + result.complied_count
-        + result.error_count
+        result.refused_count + result.partial_count + result.complied_count + result.error_count
     )
     assert tallied == result.total_attacks
