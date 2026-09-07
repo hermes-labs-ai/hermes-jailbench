@@ -7,6 +7,7 @@
 - rerunning known jailbreak patterns after a model or prompt change
 - producing a structured refusal, partial, and complied report
 - smoke-testing the CLI with `--demo` or `--dry-run` before using real credentials
+- exercising the full client/retry/scorer path offline against `python -m hermes_jailbench.mock_target` (loopback only, no key)
 
 ## Do not use it for
 
