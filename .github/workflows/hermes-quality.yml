@@ -1,0 +1,21 @@
+name: Hermes quality rail
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install project and declared gate tools
+        run: python3 -m pip install -e '.' ruff pytest
+      - name: Run declared full gate
+        run: python3 .hermes/hermes_gate_runner.py full

@@ -67,3 +67,93 @@ def test_empty_but_successful_response_is_scored_and_tallied(monkeypatch) -> Non
         result.refused_count + result.partial_count + result.complied_count + result.error_count
     )
     assert tallied == result.total_attacks
+
+
+class _FakeMessagesShaped:
+    def __init__(self, message: object) -> None:
+        self._message = message
+        self.calls = 0
+
+    def create(self, **kwargs):
+        self.calls += 1
+        return self._message
+
+
+class _FakeClientShaped:
+    def __init__(self, message: object) -> None:
+        self.messages = _FakeMessagesShaped(message)
+
+    def __call__(self, api_key=None):
+        return self
+
+
+class _Empty:
+    content: list = []
+
+
+class _ToolOnly:
+    def __init__(self) -> None:
+        self.content = [type("ToolUse", (), {"type": "tool_use"})()]
+
+
+def test_reply_with_no_content_blocks_is_a_readable_malformed_response_error(monkeypatch) -> None:
+    """Regression: this used to surface as the bare string 'list index out of range'."""
+    client = _FakeClientShaped(_Empty())
+    monkeypatch.setattr(anthropic, "Anthropic", client)
+
+    result = run_bench(attack_names=["DAN Classic"], api_key="test-key", delay_seconds=0.0)
+
+    ar = result.attacks[0]
+    assert ar.score is None
+    assert ar.error == "malformed response: message carries no content blocks"
+    assert result.error_count == 1
+    assert client.messages.calls == 1, "a malformed reply is not retried"
+
+
+def test_reply_whose_first_block_has_no_text_is_a_readable_malformed_response_error(
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(anthropic, "Anthropic", _FakeClientShaped(_ToolOnly()))
+
+    result = run_bench(attack_names=["DAN Classic"], api_key="test-key", delay_seconds=0.0)
+
+    assert (
+        result.attacks[0].error == "malformed response: first content block (tool_use) has no text"
+    )
+    assert result.error_count == 1
+
+
+class _FakeMessagesTimeout:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def create(self, **kwargs):
+        self.calls += 1
+        raise anthropic.APITimeoutError(request=None)  # type: ignore[arg-type]
+
+
+class _FakeClientTimeout:
+    def __init__(self) -> None:
+        self.messages = _FakeMessagesTimeout()
+
+    def __call__(self, api_key=None):
+        return self
+
+
+def test_timeout_is_retried_then_recorded_as_an_error_not_a_verdict(monkeypatch) -> None:
+    client = _FakeClientTimeout()
+    monkeypatch.setattr(anthropic, "Anthropic", client)
+
+    result = run_bench(
+        attack_names=["DAN Classic"],
+        api_key="test-key",
+        delay_seconds=0.0,
+        max_retries=2,
+        retry_base_delay=0.0,
+    )
+
+    ar = result.attacks[0]
+    assert ar.score is None
+    assert ar.error is not None
+    assert result.error_count == 1
+    assert client.messages.calls == 3, "initial attempt plus max_retries retries"

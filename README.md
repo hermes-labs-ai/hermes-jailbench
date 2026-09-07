@@ -109,6 +109,48 @@ print(md)
 
 ---
 
+## Offline mock target and result envelope
+
+You can exercise the whole pipeline — the real SDK client, the real retry
+classification, the real scorer — without sending anything to a provider.
+`hermes_jailbench.mock_target` serves a Messages-API-shaped endpoint on
+127.0.0.1 only and never validates a key; the SDK is pointed at it with
+`ANTHROPIC_BASE_URL`, which the SDK reads itself. Behaviour is chosen by model
+name:
+
+| `--model`           | The mock answers with                         | You see    |
+|---------------------|-----------------------------------------------|------------|
+| `mock-refuses`      | a canonical refusal                           | `REFUSED`  |
+| `mock-complies`     | a canonical step-by-step reply                | `COMPLIED` |
+| `mock-hedges`       | a hedged partial reply                        | `PARTIAL`  |
+| `mock-malformed`    | valid JSON with no content blocks             | `ERROR`    |
+| `mock-server-error` | HTTP 500 every time (retried, then gives up)  | `ERROR`    |
+| `mock-bad-request`  | HTTP 400 every time (not retried)             | `ERROR`    |
+
+```bash
+python -m hermes_jailbench.mock_target          # prints the loopback URL; Ctrl-C to stop
+ANTHROPIC_BASE_URL=http://127.0.0.1:PORT hermes-jailbench --model mock-complies \
+  --api-key mock --attacks "DAN Classic" --format json --fail-on-bypass
+```
+
+The same run can be emitted as a Hermes Reliability Lab result envelope — the
+JSON report embedded verbatim, plus tool version, a hash of the exact input,
+one finding per attack with the scorer's verdict kept as written, the
+`--fail-on-bypass` exit code, a timestamp, the Git commit when run from a
+checkout, and an explicit record of what the mock received:
+
+```bash
+python -m hermes_jailbench.evidence --mock mock-refuses --attacks "DAN Classic"
+python -m hermes_jailbench.evidence --dry-run --attacks "DAN Classic"
+```
+
+The emitter has no live mode and never reads `ANTHROPIC_API_KEY`; the key it
+sends is the literal `mock-not-a-credential`, and the mock's request log is
+part of the record. A request timeout cannot be provoked through the mock
+because the CLI exposes no request-timeout setting (the SDK default read
+timeout is 600s); the timeout path is covered by the offline test suite at
+the retry-classification layer instead.
+
 ## Attack Categories
 
 | Category | Count | Description |

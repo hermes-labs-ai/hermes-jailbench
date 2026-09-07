@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-09-07
+
+### Added
+- `python -m hermes_jailbench.mock_target`: a loopback-only, credential-free Messages-API stand-in with behaviour chosen by model name (refuses / complies / hedges / malformed / server-error / bad-request), so the real client, retry classification, and scorer can be exercised end to end offline.
+- `python -m hermes_jailbench.evidence`: emit a mock or dry run as a Hermes Reliability Lab result envelope with the JSON report embedded verbatim. No live mode; never reads `ANTHROPIC_API_KEY`.
+
+### Fixed
+- A provider reply that is well-formed JSON but carries no content blocks (or whose first block has no text) now reports `malformed response: ...` instead of the bare Python `list index out of range`. It is still an `ERROR`, still not retried.
+
 ## [0.1.2] - 2026-09-05
 
 ### Added
@@ -48,7 +57,8 @@ No attack catalog, scoring rule, or benchmark behavior changed.
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.1.0
