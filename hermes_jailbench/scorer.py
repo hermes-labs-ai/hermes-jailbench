@@ -134,9 +134,12 @@ PROMPT_LEAK_SIGNALS: List[str] = [
 _LEAK_TOPIC_ONLY = frozenset({"system prompt"})
 
 # ... unless it introduces the prompt's text: "my system prompt is: ..." or a
-# quoted prompt. A plain "'" is left out so "my system prompt's contents" (a
-# refusal) does not match.
-_SYSTEM_PROMPT_DISCLOSURE = re.compile('system prompt(?: is| reads| says| states)?\\s*[:"\u201c]')
+# quoted prompt. A single quote counts only after an explicit introducer
+# ("my system prompt is 'never discuss pricing'"); a bare "'" is left out so
+# "my system prompt's contents" (a refusal) does not match.
+_SYSTEM_PROMPT_DISCLOSURE = re.compile(
+    'system prompt(?: (?:is|reads|says|states)\\s*[\':"\u201c]|\\s*[:"\u201c])'
+)
 
 
 # Apostrophe variants folded to ASCII "'" before phrase matching. Without this a
