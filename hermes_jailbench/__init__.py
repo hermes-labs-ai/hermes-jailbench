@@ -6,6 +6,7 @@ Exports the primary public API:
     BenchResult   — result container with aggregate stats
     ConversationIntegrityDetector  — detect history fabrication and gaslighting
     scan()        — prescan messages for prompt injection patterns
+    garak_single() — run the prescan as a garak `generators.function.Single` target
 """
 
 from .attacks import ALL_ATTACKS, ATTACKS_BY_CATEGORY, Attack, Category, ExpectedResult
@@ -14,7 +15,7 @@ from .conversation_integrity import (
     ConversationResult,
     check_message,
 )
-from .prescan import DetectedPattern, PrescanResult, scan, scan_batch
+from .prescan import DetectedPattern, PrescanResult, garak_single, scan, scan_batch
 from .report import generate_report, save_report
 from .runner import AttackResult, BenchResult, run_bench
 from .scorer import ScoreResult, score_response
@@ -37,6 +38,7 @@ __all__ = [
     "check_message",
     "scan",
     "scan_batch",
+    "garak_single",
     "PrescanResult",
     "DetectedPattern",
 ]
