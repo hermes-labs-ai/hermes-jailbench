@@ -15,14 +15,33 @@
 - multi-turn adversarial testing
 - semantic judgment of ambiguous responses without human review
 
+## Install
+
+Product use — published package, no clone needed, and the demo needs no API key:
+
+```bash
+pip install hermes-jailbench
+hermes-jailbench --demo
+```
+
+Contributor use — run from a clone of this repository:
+
+```bash
+git clone https://github.com/hermes-labs-ai/hermes-jailbench
+cd hermes-jailbench
+pip install -e ".[dev]"
+```
+
+End-user usage and the full CLI flag list live in [README.md](README.md). Contributor
+standards live in [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Minimal commands
 
 ```bash
-pip install -e ".[dev]"
-hermes-jailbench --demo
-hermes-jailbench --dry-run
-pytest -q
-ruff check hermes_jailbench tests
+hermes-jailbench --demo             # offline showcase run
+hermes-jailbench --dry-run          # print prompts, no API calls
+pytest -q                           # from a clone
+ruff check hermes_jailbench tests   # from a clone
 ```
 
 ## Output shape
