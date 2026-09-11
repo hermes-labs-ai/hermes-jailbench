@@ -38,6 +38,9 @@ dev = [
     "pytest-cov>=4.0",
     "ruff>=0.4.0",
     "mypy>=1.0",
+    # Only so tests/test_ci_mode.py can parse action.yml; the package itself
+    # reads no YAML and gains no runtime dependency.
+    "pyyaml>=6",
 ]
 
 [project.scripts]

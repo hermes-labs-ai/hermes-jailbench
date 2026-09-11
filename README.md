@@ -271,6 +271,7 @@ Options:
   --retry-base-delay FLOAT  Base delay for exponential backoff [default: 1.0]
   --output PATH             Save report to file
   --format {markdown,json}  Report format [default: markdown]
+  --json PATH               Also write the JSON report to PATH, in addition to --output
   --include-responses       Include full responses in report
   --fail-on-bypass [PCT]    CI gate: exit 1 if bypass rate > PCT (default 0), 2 if any attack errored
   --list-attacks            List all attacks and exit
@@ -300,11 +301,76 @@ Exit codes:
 | `1` | Bypass rate exceeds the threshold |
 | `2` | Gate could not be evaluated (one or more attacks errored, no attack ran, or the flag was combined with `--dry-run`) |
 
+The same table is printed at the bottom of `hermes-jailbench --help`, so a CI author does not have to open this file to write the `if` around the command.
+
 The report is always written before the exit code is set, so it can be uploaded as a CI artifact on failure.
+
+### The machine-readable report
+
+`--json PATH` writes the JSON report **in addition to** `--output`, so one run produces both a markdown report for a human and a JSON artifact for the next run to be compared against:
+
+```bash
+hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 \
+  --output jailbench-report.md --json jailbench-report.json
+```
+
+The JSON carries per-attack verdicts plus a summary and the provenance needed to tell two runs apart:
+
+```jsonc
+{
+  "generated_at": "2026-09-11T18:47:12Z",
+  "version": "0.1.3",          // the hermes-jailbench that produced it
+  "model": "llama3.2",
+  "provider": "openai-compat", // which client spoke to the target
+  "base_url": "http://localhost:11434/v1",  // null for the plain Anthropic API
+  "target_payload": "...",
+  "summary": { "total_attacks": 45, "refused_count": 45, "partial_count": 0,
+               "complied_count": 0, "error_count": 0,
+               "bypass_rate": 0.0, "refusal_rate": 1.0 },
+  "by_category": [ /* one entry per category, with its own bypass_rate */ ],
+  "attacks":     [ /* one entry per attack: verdict, confidence, matched phrases, notes */ ]
+}
+```
+
+Model responses are omitted unless `--include-responses` is given, so the artifact can be uploaded without publishing what the target said.
 
 With the gate enabled, **any** errored attack (network failure, rate limit, auth error) makes the run non-evaluable and exits `2`, even if every scored attack was refused. An unscored attack could be a bypass, so a partially failed run never passes green; fix the cause or raise `--delay` / `--max-retries` and rerun. Without the flag, errored attacks are excluded from the reported bypass rate as before and the exit code stays `0`.
 
-Minimal GitHub Actions step:
+### GitHub Actions
+
+The repository ships a composite action, so the whole gate is one step:
+
+```yaml
+- name: Jailbreak regression gate
+  uses: hermes-labs-ai/hermes-jailbench@main
+  with:
+    model: claude-haiku-4-5
+    api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+    fail-on-bypass: "5"
+
+- name: Upload reports
+  if: always()
+  uses: actions/upload-artifact@v4
+  with:
+    name: jailbench-report
+    path: jailbench-report.*
+```
+
+Against a self-hosted or local endpoint, with no Anthropic key anywhere in the job:
+
+```yaml
+- name: Jailbreak regression gate (local model)
+  uses: hermes-labs-ai/hermes-jailbench@main
+  with:
+    provider: openai-compat
+    base-url: http://localhost:11434/v1
+    model: llama3.2
+    fail-on-bypass: "5"
+```
+
+Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is passed to the CLI through the step's environment, never interpolated into the command line, so it does not appear in the runner's process list. Pin `@main` to a tag once you have one.
+
+The same thing without the action:
 
 ```yaml
 - name: Jailbreak regression gate
@@ -312,13 +378,8 @@ Minimal GitHub Actions step:
     ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
   run: |
     pip install hermes-jailbench
-    hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 --output jailbench-report.md
-- name: Upload report
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: jailbench-report
-    path: jailbench-report.md
+    hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 \
+      --output jailbench-report.md --json jailbench-report.json
 ```
 
 ---

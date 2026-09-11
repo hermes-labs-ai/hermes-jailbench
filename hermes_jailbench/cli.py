@@ -38,6 +38,20 @@ EXIT_GATE_PASSED = 0
 EXIT_GATE_FAILED = 1
 EXIT_GATE_NOT_EVALUABLE = 2
 
+#: The exit-code contract, shown at the bottom of --help so a CI author does not
+#: have to open the README to write the `if` around this command.
+EXIT_CODE_HELP = """\
+exit codes:
+  0  the run finished; with --fail-on-bypass, the bypass rate is within the threshold
+  1  --fail-on-bypass: the bypass rate exceeds the threshold, or a report file
+     could not be written, or no API key was given for the anthropic provider
+  2  the run could not be evaluated: an attack errored, no attack ran, the
+     arguments were rejected, or the endpoint could not be configured
+
+The report is always written before a non-zero exit code is set, so it can be
+uploaded as a CI artifact on failure.
+"""
+
 
 def _supports_color() -> bool:
     return hasattr(sys.stdout, "isatty") and sys.stdout.isatty()
@@ -111,10 +125,38 @@ def evaluate_gate(result: BenchResult, threshold_pct: float) -> tuple[int, str]:
     return EXIT_GATE_PASSED, f"GATE PASSED: {detail}"
 
 
+def _save_or_exit(
+    result: BenchResult,
+    path: str,
+    output_format: str,
+    include_responses: bool,
+    flag: str,
+) -> None:
+    """Write one report file, or print a one-line reason and exit 1."""
+    try:
+        save_report(
+            result,
+            path,
+            include_responses=include_responses,
+            output_format=output_format,
+        )
+    except IsADirectoryError:
+        print(f"ERROR: {flag} {path!r} is a directory, expected a file path.", file=sys.stderr)
+        sys.exit(1)
+    except PermissionError:
+        print(f"ERROR: permission denied writing to {path!r}.", file=sys.stderr)
+        sys.exit(1)
+    except OSError as exc:
+        print(f"ERROR: could not write report to {path!r}: {exc}", file=sys.stderr)
+        sys.exit(1)
+
+
 def main(argv: Optional[list[str]] = None) -> None:
     parser = argparse.ArgumentParser(
         prog="hermes-jailbench",
         description="Automated jailbreak testing CLI — run a battery of attacks against any LLM endpoint.",
+        epilog=EXIT_CODE_HELP,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
     parser.add_argument(
@@ -223,6 +265,18 @@ def main(argv: Optional[list[str]] = None) -> None:
         choices=["markdown", "json"],
         default="markdown",
         help="Report output format: markdown (default) or json",
+    )
+    parser.add_argument(
+        "--json",
+        dest="json_path",
+        default=None,
+        metavar="PATH",
+        help=(
+            "Also write the machine-readable JSON report to PATH (per-attack verdicts "
+            "plus a summary with bypass_rate, model, provider and the package version). "
+            "Written in addition to --output, so a CI job can keep a markdown report for "
+            "a human and a JSON baseline for the next run"
+        ),
     )
     parser.add_argument(
         "--include-responses",
@@ -404,30 +458,9 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     # Save or print report
     if args.output:
-        try:
-            save_report(
-                result,
-                args.output,
-                include_responses=args.include_responses,
-                output_format=args.output_format,
-            )
-        except IsADirectoryError:
-            print(
-                f"ERROR: --output {args.output!r} is a directory, expected a file path.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        except PermissionError:
-            print(
-                f"ERROR: permission denied writing to {args.output!r}.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        except OSError as exc:
-            print(f"ERROR: could not write report to {args.output!r}: {exc}", file=sys.stderr)
-            sys.exit(1)
+        _save_or_exit(result, args.output, args.output_format, args.include_responses, "--output")
         print(f"\nReport saved to: {args.output}")
-    else:
+    elif not args.json_path:
         print()
         md = generate_report(
             result,
@@ -435,6 +468,13 @@ def main(argv: Optional[list[str]] = None) -> None:
             output_format=args.output_format,
         )
         print(md)
+
+    # The machine-readable artifact is written in addition to --output, not
+    # instead of it: a CI job wants the markdown for a human and the JSON for the
+    # baseline it will diff the next run against.
+    if args.json_path:
+        _save_or_exit(result, args.json_path, "json", args.include_responses, "--json")
+        print(f"\nJSON report saved to: {args.json_path}")
 
     # CI gate — evaluated last so the report is always written before exiting non-zero
     if args.fail_on_bypass is not None:
