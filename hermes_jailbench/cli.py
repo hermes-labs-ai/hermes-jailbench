@@ -19,7 +19,8 @@ import sys
 from typing import Optional
 
 from .attacks import ALL_ATTACKS, Category, ExpectedResult
-from .providers import PROVIDER_ANTHROPIC, PROVIDER_OPENAI_COMPAT, PROVIDERS
+from .diff import compare, load_report, render
+from .providers import PROVIDER_ANTHROPIC, PROVIDER_OPENAI_COMPAT, PROVIDERS, redact_url
 from .report import generate_report, save_report
 from .runner import DEFAULT_MODEL, AttackResult, BenchResult, run_bench
 
@@ -50,6 +51,21 @@ exit codes:
 
 The report is always written before a non-zero exit code is set, so it can be
 uploaded as a CI artifact on failure.
+
+subcommand:
+  hermes-jailbench diff BASELINE.json CURRENT.json [--fail-on-regression]
+      Compare two --json reports and list the attacks whose verdict changed.
+"""
+
+DIFF_EXIT_CODE_HELP = """\
+exit codes:
+  0  the comparison ran (regressions may still be listed, unless
+     --fail-on-regression was given)
+  1  --fail-on-regression: at least one attack's verdict got worse
+  2  a report could not be read, parsed, or recognised
+
+An attack that errored on either side has no verdict to rank. It is listed
+under "Unscored" and never counts as a regression or an improvement.
 """
 
 
@@ -151,7 +167,59 @@ def _save_or_exit(
         sys.exit(1)
 
 
+def diff_main(argv: list[str]) -> None:
+    """
+    `hermes-jailbench diff baseline.json current.json` — what got worse.
+
+    Exit codes follow the same contract as a run: 0 clean, 1 regressions found
+    with --fail-on-regression, 2 a report could not be read.
+    """
+    parser = argparse.ArgumentParser(
+        prog="hermes-jailbench diff",
+        description=(
+            "Compare two JSON reports and list the attacks whose verdict changed. "
+            "Verdicts are ordered REFUSED < PARTIAL < COMPLIED; a move up that order "
+            "is a regression."
+        ),
+        epilog=DIFF_EXIT_CODE_HELP,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("baseline", help="The pinned JSON report to compare against")
+    parser.add_argument("current", help="The JSON report from the run being checked")
+    parser.add_argument(
+        "--fail-on-regression",
+        action="store_true",
+        help="Exit 1 if any attack's verdict got worse (default: report and exit 0)",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        baseline = load_report(args.baseline)
+        current = load_report(args.current)
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(EXIT_GATE_NOT_EVALUABLE)
+
+    diff = compare(baseline, current, args.baseline, args.current)
+    print(render(diff))
+
+    if diff.has_regressions() and args.fail_on_regression:
+        print(
+            f"\nREGRESSION: {len(diff.regressions)} attack(s) scored worse than the baseline.",
+            file=sys.stderr,
+        )
+        sys.exit(EXIT_GATE_FAILED)
+
+
 def main(argv: Optional[list[str]] = None) -> None:
+    # `diff` is dispatched before the run parser sees the arguments, so the
+    # existing flat flag interface is untouched: every other invocation parses
+    # exactly as it did before this subcommand existed.
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if arguments and arguments[0] == "diff":
+        diff_main(arguments[1:])
+        return
+
     parser = argparse.ArgumentParser(
         prog="hermes-jailbench",
         description="Automated jailbreak testing CLI — run a battery of attacks against any LLM endpoint.",
@@ -314,7 +382,7 @@ def main(argv: Optional[list[str]] = None) -> None:
         help="Enable verbose logging (DEBUG level)",
     )
 
-    args = parser.parse_args(argv)
+    args = parser.parse_args(arguments)
 
     # Resolve the endpoint before anything is printed, so a misconfigured run
     # fails on the flags rather than on the first attack.
@@ -404,7 +472,9 @@ def main(argv: Optional[list[str]] = None) -> None:
     if args.provider != PROVIDER_ANTHROPIC:
         print(f"Provider: {args.provider}")
     if args.base_url:
-        print(f"Endpoint: {args.base_url}")
+        # Redacted: a credential in the URL's userinfo would otherwise be
+        # echoed into the CI log this header is printed to.
+        print(f"Endpoint: {redact_url(args.base_url)}")
     print(f"Target:  {args.target}")
     if args.dry_run:
         print("Mode:    DRY-RUN (no API calls)")
