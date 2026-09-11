@@ -20,7 +20,7 @@ a replacement.
     python -m hermes_jailbench.evidence --mock mock-server-error --categories identity_override
     python -m hermes_jailbench.evidence --dry-run --attacks "DAN Classic"
 
-Added in v0.1.3 (unreleased).
+Added in v0.1.3.
 """
 
 from __future__ import annotations

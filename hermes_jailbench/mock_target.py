@@ -26,7 +26,7 @@ changes hands) and choose a behaviour by model name:
 
     python -m hermes_jailbench.mock_target            # serve in the foreground, print the URL
 
-Added in v0.1.3 (unreleased). Pure standard library.
+Added in v0.1.3. Pure standard library.
 """
 
 from __future__ import annotations

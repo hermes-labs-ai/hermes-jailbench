@@ -4,7 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2026-09-11
+
+A minor release: the battery now runs against any OpenAI-compatible endpoint, writes a
+machine-readable artifact, and can block a merge on a regression against a pinned baseline.
+No breaking change — every existing flag and the library API behave exactly as before, and
+the keyword scorer is untouched.
 
 ### Added
 - `hermes-jailbench diff BASELINE.json CURRENT.json` compares two `--json` reports and lists
@@ -171,7 +176,8 @@ No attack catalog, scoring rule, or benchmark behavior changed.
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.0...v0.1.1
