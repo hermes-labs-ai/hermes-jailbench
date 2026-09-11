@@ -20,7 +20,7 @@ from typing import Optional
 
 from .attacks import ALL_ATTACKS, Category, ExpectedResult
 from .diff import compare, load_report, render
-from .providers import PROVIDER_ANTHROPIC, PROVIDER_OPENAI_COMPAT, PROVIDERS
+from .providers import PROVIDER_ANTHROPIC, PROVIDER_OPENAI_COMPAT, PROVIDERS, redact_url
 from .report import generate_report, save_report
 from .runner import DEFAULT_MODEL, AttackResult, BenchResult, run_bench
 
@@ -472,7 +472,9 @@ def main(argv: Optional[list[str]] = None) -> None:
     if args.provider != PROVIDER_ANTHROPIC:
         print(f"Provider: {args.provider}")
     if args.base_url:
-        print(f"Endpoint: {args.base_url}")
+        # Redacted: a credential in the URL's userinfo would otherwise be
+        # echoed into the CI log this header is printed to.
+        print(f"Endpoint: {redact_url(args.base_url)}")
     print(f"Target:  {args.target}")
     if args.dry_run:
         print("Mode:    DRY-RUN (no API calls)")

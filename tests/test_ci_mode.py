@@ -189,3 +189,19 @@ def test_action_yml_passes_the_key_through_the_environment_not_the_command_line(
 
     assert "${{ inputs.api-key }}" not in run_step["run"]
     assert run_step["env"]["JAILBENCH_API_KEY"] == "${{ inputs.api-key }}"
+
+
+def test_action_yml_never_puts_the_key_in_the_cli_argv() -> None:
+    """`--api-key <secret>` is argv: readable in the runner's process list.
+
+    Keeping the GitHub expression out of `run:` is not enough — the value
+    still reaches argv if the script appends `--api-key "$JAILBENCH_API_KEY"`.
+    The key must be exported for the CLI to read from the environment.
+    """
+    yaml = pytest.importorskip("yaml")
+    steps = yaml.safe_load(ACTION_YML.read_text())["runs"]["steps"]
+    script = next(step for step in steps if "hermes-jailbench " in step.get("run", ""))["run"]
+
+    assert "--api-key" not in script
+    assert 'export ANTHROPIC_API_KEY="$JAILBENCH_API_KEY"' in script
+    assert 'export OPENAI_API_KEY="$JAILBENCH_API_KEY"' in script

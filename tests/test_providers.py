@@ -23,6 +23,7 @@ from hermes_jailbench.providers import (
     ProviderResponseError,
     completion_text,
     normalize_base_url,
+    redact_url,
 )
 from hermes_jailbench.runner import run_bench
 
@@ -389,3 +390,48 @@ def test_cli_reports_an_unusable_base_url_as_a_configuration_error(capsys) -> No
         )
     assert exc_info.value.code == 2
     assert "must start with http" in capsys.readouterr().err
+
+
+# ---------------------------------------------------------------------------
+# a credential pasted into --base-url must not reach the artifact or the log
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "url, expected",
+    [
+        ("https://user:sk-secret@gateway.example/v1", "https://***@gateway.example/v1"),
+        ("https://sk-secret@gateway.example/v1", "https://***@gateway.example/v1"),
+        ("http://u:p@127.0.0.1:8000/v1", "http://***@127.0.0.1:8000/v1"),
+        ("http://localhost:11434/v1", "http://localhost:11434/v1"),
+        ("", ""),
+        (None, None),
+    ],
+)
+def test_redact_url_strips_userinfo_and_leaves_everything_else(url, expected) -> None:
+    assert redact_url(url) == expected
+
+
+def test_client_error_messages_name_the_redacted_url() -> None:
+    """A connection failure is logged; the message must not carry the secret."""
+    client = OpenAICompatClient(base_url="http://user:sk-secret@127.0.0.1:1/v1")
+
+    assert "sk-secret" not in client.display_url
+    with pytest.raises(Exception) as exc_info:
+        client.complete(model="x", max_tokens=8, prompt="hi")
+    assert "sk-secret" not in str(exc_info.value)
+
+
+def test_bench_result_records_the_base_url_redacted() -> None:
+    """The JSON report is committed as a baseline and uploaded from CI."""
+    result = run_bench(
+        provider=PROVIDER_OPENAI_COMPAT,
+        base_url="https://user:sk-secret@gateway.example/v1",
+        model="llama3.2",
+        attack_names=ONE_ATTACK,
+        dry_run=True,
+        delay_seconds=0,
+    )
+
+    assert result.base_url == "https://***@gateway.example/v1"
+    assert "sk-secret" not in json.dumps(result.base_url)
