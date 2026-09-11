@@ -6,7 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+- The default model is now `claude-sonnet-5` (`runner.DEFAULT_MODEL`, read by both `run_bench()`
+  and the CLI `--model` default). The previous default, `claude-sonnet-4-20250514`, was retired
+  on 2026-06-15, so every live run that did not pass `--model` failed with a 404. README, SPEC,
+  and the demo output text now show the current default.
+- The `anthropic` dependency is pinned to `>=1,<2`. The Messages call the runner makes is unchanged
+  on the 1.x SDK; the pin records the major version the offline suite is validated against.
+
 ### Fixed
+- Reply text is now every `text` block of the message joined in order, instead of `content[0].text`.
+  Current models run adaptive thinking by default and lead with a `thinking` block, so the old
+  extraction reported `malformed response` for every live attack. A reply whose content carries
+  no text block is still an `ERROR` (`malformed response: no text content block (blocks: ...)`).
+- A reply the provider's safety classifier declined (HTTP 200, `stop_reason == "refusal"`, no
+  text) is reported as `provider refusal: ... (stop_reason=refusal, category=...)`, not as a
+  malformed response. It is still an `ERROR`, still not retried, and still makes
+  `--fail-on-bypass` exit 2.
+- Docs: `CLAUDE.md` now lists the scorer's actual waterfall (blank pre-check, refusal-plus-leak,
+  no-signal branch, and the residual default) and all four phrase lists; `SPEC.md` §3.1 documents
+  the refusal-plus-leak branch; the README scorer section states the waterfall and the residual
+  `REFUSED` default, and the CLI reference lists `--demo`, `--max-retries`, `--retry-base-delay`,
+  `--format` and `--verbose`; the test count in `CONTRIBUTING.md` and `benchmarks/README.md` is
+  current.
 - A successful response that matches no refusal, partial, compliance, or prompt-leak
   phrase is now scored `PARTIAL` at confidence 0.25 with a manual-review note, instead
   of falling through to `REFUSED`. An unreviewed response can no longer be counted as

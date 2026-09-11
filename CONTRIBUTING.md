@@ -12,7 +12,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-You should see 251 passing tests. If you don't, open an issue before submitting a patch.
+You should see 458 passing tests. If you don't, open an issue before submitting a patch.
 
 ## Adding a new attack
 

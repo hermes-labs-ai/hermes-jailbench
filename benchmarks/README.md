@@ -18,7 +18,7 @@ Runs the full test suite, which includes 251 unit tests covering attack renderin
 pytest -q
 ```
 
-Expected: 251 passed.
+Expected: 458 passed.
 
 ## Live regression baseline (requires API key)
 
@@ -41,7 +41,7 @@ Run the baseline once per release of each model you care about. Commit the repor
 
 ```
 benchmarks/
-  baseline-claude-sonnet-4.md
+  baseline-claude-sonnet-5.md
   baseline-claude-haiku-4-5.md
   baseline-gpt-5.md        # once OpenAI support lands in v0.2
   baseline-gemini-2.md     # once Google support lands in v0.2

@@ -150,10 +150,78 @@ def test_reply_whose_first_block_has_no_text_is_a_readable_malformed_response_er
 
     result = run_bench(attack_names=["DAN Classic"], api_key="test-key", delay_seconds=0.0)
 
-    assert (
-        result.attacks[0].error == "malformed response: first content block (tool_use) has no text"
-    )
+    assert result.attacks[0].error == "malformed response: no text content block (blocks: tool_use)"
     assert result.error_count == 1
+
+
+class _ThinkingThenText:
+    """
+    The reply shape of a current model with adaptive thinking on (the default when
+    the request omits ``thinking`` on Sonnet 5 / Opus 5): a thinking block first,
+    the answer in a later text block.
+    """
+
+    def __init__(self, text: str) -> None:
+        self.content = [
+            type("Thinking", (), {"type": "thinking", "thinking": ""})(),
+            type("Text", (), {"type": "text", "text": text})(),
+        ]
+        self.stop_reason = "end_turn"
+
+
+def test_text_after_a_thinking_block_is_scored_not_reported_malformed(monkeypatch) -> None:
+    """Regression: content[0].text raised on every reply that led with a thinking block."""
+    monkeypatch.setattr(
+        anthropic, "Anthropic", _FakeClientShaped(_ThinkingThenText("I can't help with that."))
+    )
+
+    result = run_bench(attack_names=["DAN Classic"], api_key="test-key", delay_seconds=0.0)
+
+    ar = result.attacks[0]
+    assert ar.error is None
+    assert ar.response == "I can't help with that."
+    assert ar.score is not None and ar.score.verdict == ExpectedResult.REFUSED
+    assert result.refused_count == 1 and result.error_count == 0
+
+
+class _ProviderRefusal:
+    """HTTP 200, ``stop_reason == "refusal"``, nothing generated: a classifier decline."""
+
+    def __init__(self) -> None:
+        self.content: list = []
+        self.stop_reason = "refusal"
+        self.stop_details = type("StopDetails", (), {"type": "refusal", "category": "cyber"})()
+
+
+def test_provider_refusal_with_no_text_is_a_readable_error_not_malformed(monkeypatch) -> None:
+    client = _FakeClientShaped(_ProviderRefusal())
+    monkeypatch.setattr(anthropic, "Anthropic", client)
+
+    result = run_bench(attack_names=["DAN Classic"], api_key="test-key", delay_seconds=0.0)
+
+    ar = result.attacks[0]
+    assert ar.score is None
+    assert ar.error is not None
+    assert ar.error.startswith("provider refusal:")
+    assert "stop_reason=refusal" in ar.error and "category=cyber" in ar.error
+    assert "malformed" not in ar.error
+    assert result.error_count == 1
+    assert client.messages.calls == 1, "a provider refusal is not retried"
+
+
+def test_default_model_is_a_current_alias_shared_by_cli_and_library() -> None:
+    """
+    The default must be an alias, never a dated snapshot: the previous default,
+    claude-sonnet-4-20250514, was retired and every live run against it 404s.
+    """
+    import inspect
+    import re
+
+    from hermes_jailbench.runner import DEFAULT_MODEL
+
+    assert not re.search(r"-\d{8}$", DEFAULT_MODEL), DEFAULT_MODEL
+    assert DEFAULT_MODEL.startswith("claude-")
+    assert inspect.signature(run_bench).parameters["model"].default == DEFAULT_MODEL
 
 
 class _FakeMessagesTimeout:
