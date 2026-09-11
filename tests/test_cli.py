@@ -215,3 +215,15 @@ def test_cli_gate_rejects_out_of_range_threshold(
     monkeypatch: pytest.MonkeyPatch, value: str
 ) -> None:
     assert _run_main(monkeypatch, _bench(refused=1), ["--fail-on-bypass", value]) == 2
+
+
+def test_demo_prints_the_library_default_model(capsys) -> None:
+    """--demo needs no key and shows the same default model run_bench() uses."""
+    from hermes_jailbench.runner import DEFAULT_MODEL
+
+    cli.main(["--demo"])
+
+    out = capsys.readouterr().out
+    assert f"Model:   {DEFAULT_MODEL}" in out
+    assert "Mode:    DRY-RUN (no API calls)" in out
+    assert "Total attacks : 17" in out

@@ -2,7 +2,7 @@
 CLI entry point for hermes-jailbench.
 
 Usage:
-    python -m hermes_jailbench --model claude-sonnet-4-20250514 --api-key $KEY
+    python -m hermes_jailbench --model claude-sonnet-5 --api-key $KEY
     python -m hermes_jailbench --dry-run
     python -m hermes_jailbench --categories identity_override framing_bypass
     python -m hermes_jailbench --output report.md --include-responses
@@ -18,7 +18,7 @@ from typing import Optional
 
 from .attacks import ALL_ATTACKS, Category, ExpectedResult
 from .report import generate_report, save_report
-from .runner import AttackResult, BenchResult, run_bench
+from .runner import DEFAULT_MODEL, AttackResult, BenchResult, run_bench
 
 logger = logging.getLogger(__name__)
 
@@ -116,8 +116,8 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     parser.add_argument(
         "--model",
-        default="claude-sonnet-4-20250514",
-        help="Anthropic model ID (default: claude-sonnet-4-20250514)",
+        default=DEFAULT_MODEL,
+        help=f"Anthropic model ID (default: {DEFAULT_MODEL})",
     )
     parser.add_argument(
         "--api-key",
