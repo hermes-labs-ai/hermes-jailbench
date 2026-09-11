@@ -120,6 +120,48 @@ def normalize_base_url(base_url: str) -> str:
     return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
 
 
+def redact_url(url: Optional[str]) -> Optional[str]:
+    """
+    Return ``url`` with any userinfo credential replaced by ``***``.
+
+    A base URL may legitimately carry a credential in its userinfo component
+    (``https://user:key@gateway/v1``). That credential must never reach a place
+    the run is expected to publish: the JSON artifact a CI job uploads, the
+    markdown report, the console header, or an error message in a build log.
+    The URL is redacted everywhere it is *shown or recorded*; what is sent on
+    the wire is unchanged.
+
+    >>> redact_url("https://user:sk-secret@gateway.example/v1")
+    'https://***@gateway.example/v1'
+    >>> redact_url("http://localhost:11434/v1")
+    'http://localhost:11434/v1'
+
+    A URL that cannot be parsed is reported as ``<unparseable base_url>``
+    rather than echoed, because an unparseable string may still hold a secret.
+    """
+    if not url:
+        return url
+    try:
+        parsed = urllib.parse.urlsplit(url)
+        # .port parses lazily: urlsplit() accepts "host:not-a-port" and the
+        # ValueError surfaces here, so it has to be read inside the guard.
+        # Raising would put the un-redacted URL in a traceback.
+        port = parsed.port
+    except ValueError:
+        return "<unparseable base_url>"
+    if parsed.username is None and parsed.password is None:
+        return url
+    host = parsed.hostname or ""
+    if ":" in host:  # IPv6 literal
+        host = f"[{host}]"
+    netloc = f"***@{host}"
+    if port is not None:
+        netloc = f"{netloc}:{port}"
+    return urllib.parse.urlunsplit(
+        (parsed.scheme, netloc, parsed.path, parsed.query, parsed.fragment)
+    )
+
+
 def completion_text(payload: Any) -> str:
     """
     Return the assistant text of a chat-completions response body.
@@ -188,6 +230,10 @@ class OpenAICompatClient:
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
     ) -> None:
         self.url = normalize_base_url(base_url)
+        #: The same URL with any userinfo credential redacted. Every message
+        #: this client raises names ``display_url``, never ``url``, so a
+        #: credential pasted into --base-url cannot reach a CI log.
+        self.display_url = redact_url(self.url) or self.url
         self.api_key = api_key or None
         self.timeout = timeout
 
@@ -221,22 +267,25 @@ class OpenAICompatClient:
                 raw = response.read()
         except urllib.error.HTTPError as exc:
             raise ProviderHTTPError(
-                f"HTTP {exc.code} from {self.url}: {_error_detail(exc)}", status_code=exc.code
+                f"HTTP {exc.code} from {self.display_url}: {_error_detail(exc)}",
+                status_code=exc.code,
             ) from exc
         except urllib.error.URLError as exc:
-            raise ProviderConnectionError(f"could not reach {self.url}: {exc.reason}") from exc
+            raise ProviderConnectionError(
+                f"could not reach {self.display_url}: {exc.reason}"
+            ) from exc
         except TimeoutError as exc:
             raise ProviderConnectionError(
-                f"no reply from {self.url} within {self.timeout:g}s"
+                f"no reply from {self.display_url} within {self.timeout:g}s"
             ) from exc
         except OSError as exc:
-            raise ProviderConnectionError(f"could not reach {self.url}: {exc}") from exc
+            raise ProviderConnectionError(f"could not reach {self.display_url}: {exc}") from exc
 
         try:
             payload = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise ProviderResponseError(
-                f"malformed response: {self.url} did not return JSON ({exc})"
+                f"malformed response: {self.display_url} did not return JSON ({exc})"
             ) from exc
 
         return completion_text(payload)

@@ -19,6 +19,7 @@ from .providers import (
     PROVIDER_OPENAI_COMPAT,
     PROVIDERS,
     OpenAICompatClient,
+    redact_url,
 )
 from .scorer import ScoreResult, score_response
 
@@ -263,7 +264,10 @@ def run_bench(
         model=model,
         target_payload=target_payload,
         provider=provider,
-        base_url=base_url,
+        # Recorded redacted: the JSON report is meant to be committed as a
+        # baseline and uploaded as a CI artifact, so a credential pasted into
+        # --base-url must not travel with it. The request still uses base_url.
+        base_url=redact_url(base_url),
         total_attacks=len(attacks),
     )
 
@@ -295,7 +299,7 @@ def run_bench(
             return openai_client.complete(model=model, max_tokens=max_tokens, prompt=prompt)
 
         send = _send_openai_compat
-        endpoint = openai_client.url
+        endpoint = openai_client.display_url
     else:
         # Import anthropic here so dry-run works without the SDK installed
         try:
@@ -319,7 +323,7 @@ def run_bench(
             )
 
         send = _send_anthropic
-        endpoint = base_url or "the Anthropic API"
+        endpoint = redact_url(base_url) or "the Anthropic API"
 
     logger.info(
         "Starting live run against model=%s provider=%s endpoint=%s with %d attacks.",
