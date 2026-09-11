@@ -1,7 +1,12 @@
 """
 hermes_jailbench/mock_target.py
 
-A deterministic, loopback-only stand-in for an Anthropic Messages endpoint.
+A deterministic, loopback-only stand-in for a target endpoint.
+
+It serves both shapes the benchmark speaks: ``POST /v1/messages`` (Anthropic)
+and ``POST /v1/chat/completions`` (OpenAI-compatible — Ollama, vLLM, LM Studio,
+OpenRouter). The scenario is chosen by model name and is identical on both
+routes, so one set of fixtures exercises both providers.
 
 It exists so the benchmark can be exercised end to end — the real SDK client,
 the real retry classification in runner.py, the real scorer — without sending
@@ -14,6 +19,7 @@ changes hands) and choose a behaviour by model name:
     mock-complies      200, a canonical step-by-step reply -> scorer: COMPLIED
     mock-hedges        200, a hedged partial reply         -> scorer: PARTIAL
     mock-malformed     200, valid JSON with no content     -> runner: ERROR
+    mock-filtered      200, stopped by a content filter    -> runner: ERROR (provider refusal)
     mock-server-error  500 on every request                -> runner: ERROR (after retries)
     mock-bad-request   400 on every request                -> runner: ERROR (immediately)
     anything else      400 "unknown mock model"            -> runner: ERROR
@@ -54,6 +60,7 @@ SCENARIOS: dict[str, str] = {
     "mock-complies": "200 with step-by-step content the scorer classifies as COMPLIED",
     "mock-hedges": "200 with a hedged reply the scorer classifies as PARTIAL",
     "mock-malformed": "200 with valid JSON that carries no content blocks",
+    "mock-filtered": "200 with no text, stopped by the endpoint's own content filter",
     "mock-server-error": "HTTP 500 on every request (retryable, then ERROR)",
     "mock-bad-request": "HTTP 400 on every request (non-retryable, ERROR at once)",
 }
@@ -65,6 +72,8 @@ class RecordedRequest:
     prompt: str
     api_key_header: Optional[str]
     path: str
+    #: The OpenAI-compatible route's credential header, if the caller sent one.
+    authorization_header: Optional[str] = None
 
 
 @dataclass
@@ -73,7 +82,7 @@ class MockTarget:
     requests: list[RecordedRequest] = field(default_factory=list)
 
 
-def _message_body(text: Optional[str], model: str) -> dict:
+def _message_body(text: Optional[str], model: str, stop_reason: str = "end_turn") -> dict:
     content = [] if text is None else [{"type": "text", "text": text}]
     return {
         "id": "msg_mock_0001",
@@ -81,14 +90,79 @@ def _message_body(text: Optional[str], model: str) -> dict:
         "role": "assistant",
         "model": model,
         "content": content,
-        "stop_reason": "end_turn",
+        "stop_reason": stop_reason,
         "stop_sequence": None,
         "usage": {"input_tokens": 1, "output_tokens": 1},
     }
 
 
+def _completion_body(text: Optional[str], model: str, finish_reason: str = "stop") -> dict:
+    """The same reply in the OpenAI ``chat.completion`` shape."""
+    return {
+        "id": "chatcmpl-mock-0001",
+        "object": "chat.completion",
+        "created": 0,
+        "model": model,
+        "choices": [
+            {
+                "index": 0,
+                "message": {"role": "assistant", "content": text},
+                "finish_reason": finish_reason,
+            }
+        ],
+        "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+    }
+
+
 def _error_body(kind: str, message: str) -> dict:
     return {"type": "error", "error": {"type": kind, "message": message}}
+
+
+def _openai_error_body(kind: str, message: str) -> dict:
+    return {"error": {"type": kind, "message": message, "code": None}}
+
+
+#: Scenario name -> the reply text the scorer will see, or None for "no text".
+_TEXT_SCENARIOS: dict[str, Optional[str]] = {
+    "mock-refuses": REFUSAL_TEXT,
+    "mock-complies": COMPLIANCE_TEXT,
+    "mock-hedges": HEDGED_TEXT,
+    "mock-malformed": None,
+}
+
+_UNKNOWN_MODEL = "unknown mock model {model!r}; choose one of {scenarios}"
+
+
+def _anthropic_reply(model: str) -> tuple[int, dict]:
+    """Return (status, body) for the /v1/messages route."""
+    if model in _TEXT_SCENARIOS:
+        return 200, _message_body(_TEXT_SCENARIOS[model], model)
+    if model == "mock-filtered":
+        return 200, _message_body(None, model, stop_reason="refusal")
+    if model == "mock-server-error":
+        return 500, _error_body("api_error", "mock internal server error")
+    if model == "mock-bad-request":
+        return 400, _error_body("invalid_request_error", "mock bad request")
+    return 400, _error_body(
+        "invalid_request_error",
+        _UNKNOWN_MODEL.format(model=model, scenarios=sorted(SCENARIOS)),
+    )
+
+
+def _openai_reply(model: str) -> tuple[int, dict]:
+    """Return (status, body) for the /v1/chat/completions route."""
+    if model in _TEXT_SCENARIOS:
+        return 200, _completion_body(_TEXT_SCENARIOS[model], model)
+    if model == "mock-filtered":
+        return 200, _completion_body(None, model, finish_reason="content_filter")
+    if model == "mock-server-error":
+        return 500, _openai_error_body("server_error", "mock internal server error")
+    if model == "mock-bad-request":
+        return 400, _openai_error_body("invalid_request_error", "mock bad request")
+    return 400, _openai_error_body(
+        "invalid_request_error",
+        _UNKNOWN_MODEL.format(model=model, scenarios=sorted(SCENARIOS)),
+    )
 
 
 def _handler_for(target: MockTarget):
@@ -124,31 +198,16 @@ def _handler_for(target: MockTarget):
                     prompt=prompt,
                     api_key_header=self.headers.get("x-api-key"),
                     path=self.path,
+                    authorization_header=self.headers.get("Authorization"),
                 )
             )
 
-            if not self.path.endswith("/v1/messages"):
-                self._send(404, _error_body("not_found_error", f"unknown path {self.path}"))
-            elif model == "mock-refuses":
-                self._send(200, _message_body(REFUSAL_TEXT, model))
-            elif model == "mock-complies":
-                self._send(200, _message_body(COMPLIANCE_TEXT, model))
-            elif model == "mock-hedges":
-                self._send(200, _message_body(HEDGED_TEXT, model))
-            elif model == "mock-malformed":
-                self._send(200, _message_body(None, model))
-            elif model == "mock-server-error":
-                self._send(500, _error_body("api_error", "mock internal server error"))
-            elif model == "mock-bad-request":
-                self._send(400, _error_body("invalid_request_error", "mock bad request"))
+            if self.path.endswith("/v1/messages"):
+                self._send(*_anthropic_reply(model))
+            elif self.path.endswith("/chat/completions"):
+                self._send(*_openai_reply(model))
             else:
-                self._send(
-                    400,
-                    _error_body(
-                        "invalid_request_error",
-                        f"unknown mock model {model!r}; choose one of {sorted(SCENARIOS)}",
-                    ),
-                )
+                self._send(404, _error_body("not_found_error", f"unknown path {self.path}"))
 
     return Handler
 
@@ -182,10 +241,14 @@ def main(argv: Optional[list[str]] = None) -> int:
         for name, description in SCENARIOS.items():
             print(f"  {name:<20} {description}")
         print()
-        print("Example (any non-empty --api-key works; nothing is validated or read):")
+        print("Examples (any --api-key works; nothing is validated or read):")
         print(
             f"  ANTHROPIC_BASE_URL={target.base_url} hermes-jailbench --model mock-refuses "
             '--api-key mock --attacks "DAN Classic" --format json --fail-on-bypass'
+        )
+        print(
+            f"  hermes-jailbench --provider openai-compat --base-url {target.base_url}/v1 "
+            '--model mock-refuses --attacks "DAN Classic" --fail-on-bypass'
         )
         print("Press Ctrl-C to stop.")
         try:

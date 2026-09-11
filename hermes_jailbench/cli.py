@@ -3,6 +3,8 @@ CLI entry point for hermes-jailbench.
 
 Usage:
     python -m hermes_jailbench --model claude-sonnet-5 --api-key $KEY
+    python -m hermes_jailbench --provider openai-compat \
+        --base-url http://localhost:11434/v1 --model llama3.2
     python -m hermes_jailbench --dry-run
     python -m hermes_jailbench --categories identity_override framing_bypass
     python -m hermes_jailbench --output report.md --include-responses
@@ -17,6 +19,7 @@ import sys
 from typing import Optional
 
 from .attacks import ALL_ATTACKS, Category, ExpectedResult
+from .providers import PROVIDER_ANTHROPIC, PROVIDER_OPENAI_COMPAT, PROVIDERS
 from .report import generate_report, save_report
 from .runner import DEFAULT_MODEL, AttackResult, BenchResult, run_bench
 
@@ -115,14 +118,43 @@ def main(argv: Optional[list[str]] = None) -> None:
     )
 
     parser.add_argument(
+        "--provider",
+        choices=list(PROVIDERS),
+        default=PROVIDER_ANTHROPIC,
+        help=(
+            f"Target endpoint kind (default: {PROVIDER_ANTHROPIC}). "
+            f"{PROVIDER_OPENAI_COMPAT} posts to /v1/chat/completions and works with "
+            "Ollama, vLLM, LM Studio, OpenRouter and OpenAI itself; it needs --base-url "
+            "and --model"
+        ),
+    )
+    parser.add_argument(
+        "--base-url",
+        dest="base_url",
+        default=None,
+        help=(
+            "Endpoint base URL, e.g. http://localhost:11434/v1 "
+            f"(default: $OPENAI_BASE_URL). Required for --provider {PROVIDER_OPENAI_COMPAT}; "
+            "optional for anthropic, where it overrides the SDK's endpoint"
+        ),
+    )
+    parser.add_argument(
         "--model",
-        default=DEFAULT_MODEL,
-        help=f"Anthropic model ID (default: {DEFAULT_MODEL})",
+        default=None,
+        help=(
+            f"Model ID (default for --provider {PROVIDER_ANTHROPIC}: {DEFAULT_MODEL}). "
+            f"Required for --provider {PROVIDER_OPENAI_COMPAT} — pass the ID the endpoint "
+            "itself uses, e.g. llama3.2"
+        ),
     )
     parser.add_argument(
         "--api-key",
         default=None,
-        help="Anthropic API key (default: $ANTHROPIC_API_KEY)",
+        help=(
+            "API key (default: $ANTHROPIC_API_KEY, or $OPENAI_API_KEY for "
+            f"--provider {PROVIDER_OPENAI_COMPAT}, where it is optional — a local "
+            "Ollama needs none)"
+        ),
     )
     parser.add_argument(
         "--target",
@@ -230,6 +262,23 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     args = parser.parse_args(argv)
 
+    # Resolve the endpoint before anything is printed, so a misconfigured run
+    # fails on the flags rather than on the first attack.
+    args.base_url = args.base_url or os.environ.get("OPENAI_BASE_URL")
+    if args.provider == PROVIDER_OPENAI_COMPAT:
+        if not args.model:
+            parser.error(
+                f"--model is required for --provider {PROVIDER_OPENAI_COMPAT} "
+                "(the endpoint's own model ID, e.g. llama3.2)"
+            )
+        if not args.base_url and not args.dry_run and not args.demo:
+            parser.error(
+                f"--base-url is required for --provider {PROVIDER_OPENAI_COMPAT} "
+                "(e.g. http://localhost:11434/v1)"
+            )
+    elif not args.model:
+        args.model = DEFAULT_MODEL
+
     # --demo is an opinionated alias: dry-run + short category subset,
     # so new users can see the tool work end-to-end without an API key.
     if args.demo:
@@ -274,14 +323,20 @@ def main(argv: Optional[list[str]] = None) -> None:
             print(f"  {cat.value:<28} {count}")
         return
 
-    # Resolve API key
-    api_key: Optional[str] = args.api_key or os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key and not args.dry_run:
-        print(
-            "ERROR: No API key provided. Use --api-key or set $ANTHROPIC_API_KEY.",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    # Resolve API key. An OpenAI-compatible endpoint may legitimately have no
+    # credential at all (a local Ollama or LM Studio ignores the header), so a
+    # missing key is only fatal for the Anthropic provider.
+    api_key: Optional[str]
+    if args.provider == PROVIDER_OPENAI_COMPAT:
+        api_key = args.api_key or os.environ.get("OPENAI_API_KEY")
+    else:
+        api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key and not args.dry_run:
+            print(
+                "ERROR: No API key provided. Use --api-key or set $ANTHROPIC_API_KEY.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
     # Build category filter
     categories: Optional[list[Category]] = None
@@ -290,6 +345,12 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     print(f"\n{BOLD}hermes-jailbench{RESET}")
     print(f"Model:   {args.model}")
+    # Only shown when the run is not the plain Anthropic default, so the common
+    # case keeps its two-line header and the report screenshots stay current.
+    if args.provider != PROVIDER_ANTHROPIC:
+        print(f"Provider: {args.provider}")
+    if args.base_url:
+        print(f"Endpoint: {args.base_url}")
     print(f"Target:  {args.target}")
     if args.dry_run:
         print("Mode:    DRY-RUN (no API calls)")
@@ -299,19 +360,28 @@ def main(argv: Optional[list[str]] = None) -> None:
 
     logger.info("Starting benchmark. model=%s dry_run=%s", args.model, args.dry_run)
 
-    result = run_bench(
-        model=args.model,
-        api_key=api_key,
-        target_payload=args.target,
-        categories=categories,
-        attack_names=args.attacks,
-        dry_run=args.dry_run,
-        delay_seconds=args.delay,
-        max_tokens=args.max_tokens,
-        on_result=on_result_callback,
-        max_retries=args.max_retries,
-        retry_base_delay=args.retry_base_delay,
-    )
+    # A bad --base-url or --provider is a configuration fault, not a finding:
+    # report it on one line and exit 2, the same code the CI gate uses for
+    # "this run could not be evaluated".
+    try:
+        result = run_bench(
+            model=args.model,
+            api_key=api_key,
+            provider=args.provider,
+            base_url=args.base_url,
+            target_payload=args.target,
+            categories=categories,
+            attack_names=args.attacks,
+            dry_run=args.dry_run,
+            delay_seconds=args.delay,
+            max_tokens=args.max_tokens,
+            on_result=on_result_callback,
+            max_retries=args.max_retries,
+            retry_base_delay=args.retry_base_delay,
+        )
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(EXIT_GATE_NOT_EVALUABLE)
 
     # Print summary
     print()

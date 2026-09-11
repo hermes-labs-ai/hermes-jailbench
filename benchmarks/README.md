@@ -12,7 +12,7 @@ Expected: 45 attacks rendered, 8 categories, zero errors.
 
 ## Scorer accuracy (no API key required)
 
-Runs the full test suite, which includes 251 unit tests covering attack rendering, scorer decisions on known-good and known-bad responses, multilingual handling, prescan, and conversation integrity.
+Runs the full test suite, which covers attack rendering, scorer decisions on known-good and known-bad responses, multilingual handling, prescan, and conversation integrity.
 
 ```bash
 pytest -q

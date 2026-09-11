@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+- `--provider {anthropic,openai-compat}` with `--base-url` and the existing `--model`.
+  `openai-compat` posts to `{base-url}/chat/completions`, the shape Ollama, vLLM, LM Studio,
+  llama.cpp's server, OpenRouter and OpenAI speak, so the battery can be run against a local
+  or self-hosted model with no Anthropic key. It is implemented on `urllib` in the new
+  `hermes_jailbench.providers` module — **no new runtime dependency** — and the Anthropic SDK
+  import stays deferred to a live Anthropic run. `--api-key` falls back to `$OPENAI_API_KEY`
+  for this provider and is optional: with no key, no `Authorization` header is sent, which is
+  what a local runtime expects. `--base-url` falls back to `$OPENAI_BASE_URL`, accepts a bare
+  host (`http://localhost:11434` resolves to `/v1/chat/completions`), and is also honoured by
+  the `anthropic` provider, where it is passed to the SDK client.
+- `run_bench(provider=..., base_url=...)` in the library API; `BenchResult` records both.
+- A reply stopped by the endpoint's own content filter (`finish_reason: content_filter`)
+  is reported as `provider refusal: ...` and counted as an `ERROR` — the openai-compat
+  counterpart of the `stop_reason: refusal` handling on the SDK path. It is not retried,
+  and it makes `--fail-on-bypass` exit 2 rather than banking an unearned refusal.
+- `mock_target` now serves `/v1/chat/completions` alongside `/v1/messages`, with the same
+  scenarios on both routes, plus a new `mock-filtered` scenario. The openai-compat provider
+  is tested end to end through it — real sockets, real retry classification, real scorer.
+
 ### Changed
 - The default model is now `claude-sonnet-5` (`runner.DEFAULT_MODEL`, read by both `run_bench()`
   and the CLI `--model` default). The previous default, `claude-sonnet-4-20250514`, was retired
@@ -23,6 +43,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   text) is reported as `provider refusal: ... (stop_reason=refusal, category=...)`, not as a
   malformed response. It is still an `ERROR`, still not retried, and still makes
   `--fail-on-bypass` exit 2.
+- Docs: `SPEC.md` §3.1 branch 8 and the `CLAUDE.md` waterfall now note that a no-signal response
+  longer than 500 characters is claimed by branch 7 (confidence 0.35), not branch 8; the README
+  scorer paragraph states that two compliance signals produce `COMPLIED` only when they also
+  outnumber the refusal signals; `benchmarks/README.md` no longer carries a stale test count
+  next to the current expected result. (Review findings on #16, raised after it merged.)
 - Docs: `CLAUDE.md` now lists the scorer's actual waterfall (blank pre-check, refusal-plus-leak,
   no-signal branch, and the residual default) and all four phrase lists; `SPEC.md` §3.1 documents
   the refusal-plus-leak branch; the README scorer section states the waterfall and the residual
