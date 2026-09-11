@@ -143,6 +143,10 @@ def redact_url(url: Optional[str]) -> Optional[str]:
         return url
     try:
         parsed = urllib.parse.urlsplit(url)
+        # .port parses lazily: urlsplit() accepts "host:not-a-port" and the
+        # ValueError surfaces here, so it has to be read inside the guard.
+        # Raising would put the un-redacted URL in a traceback.
+        port = parsed.port
     except ValueError:
         return "<unparseable base_url>"
     if parsed.username is None and parsed.password is None:
@@ -151,8 +155,8 @@ def redact_url(url: Optional[str]) -> Optional[str]:
     if ":" in host:  # IPv6 literal
         host = f"[{host}]"
     netloc = f"***@{host}"
-    if parsed.port is not None:
-        netloc = f"{netloc}:{parsed.port}"
+    if port is not None:
+        netloc = f"{netloc}:{port}"
     return urllib.parse.urlunsplit(
         (parsed.scheme, netloc, parsed.path, parsed.query, parsed.fragment)
     )

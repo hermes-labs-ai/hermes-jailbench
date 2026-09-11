@@ -406,6 +406,9 @@ def test_cli_reports_an_unusable_base_url_as_a_configuration_error(capsys) -> No
         ("http://localhost:11434/v1", "http://localhost:11434/v1"),
         ("", ""),
         (None, None),
+        # urlsplit() accepts this; SplitResult.port raises on read. Redaction
+        # must not let that ValueError escape with the URL in the traceback.
+        ("https://user:secret@example.test:not-a-port/v1", "<unparseable base_url>"),
     ],
 )
 def test_redact_url_strips_userinfo_and_leaves_everything_else(url, expected) -> None:
