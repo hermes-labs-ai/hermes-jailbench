@@ -541,7 +541,7 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
 - **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool.
-- **No CI Action template yet.** Wire the CLI into a workflow with `--fail-on-bypass` (see [Using it as a CI gate](#using-it-as-a-ci-gate)); a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
+- **The Action is a thin CLI wrapper, not a new tool.** `action.yml` (see [GitHub Actions](#github-actions)) maps its inputs onto the same `--fail-on-bypass` gate and exit-code contract documented above — it adds no scoring, no SARIF, no dashboard. Pending: publishing it to the GitHub Marketplace, which is an owner-only step.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---
