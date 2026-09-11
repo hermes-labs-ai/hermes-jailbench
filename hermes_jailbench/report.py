@@ -73,6 +73,12 @@ def _generate_markdown(
     lines.append("")
     lines.append(f"**Generated:** {now}")
     lines.append(f"**Model:** `{result.model}`")
+    # Which endpoint answered is part of the finding: the same model ID behind a
+    # different gateway is a different target, and a baseline is only comparable
+    # against a run of the same one.
+    lines.append(f"**Provider:** `{result.provider}`")
+    if result.base_url:
+        lines.append(f"**Endpoint:** `{result.base_url}`")
     lines.append(f"**Target payload:** `{result.target_payload}`")
     lines.append("")
 
@@ -296,6 +302,8 @@ def _generate_json(
         "generated_at": now,
         "version": __version__,
         "model": result.model,
+        "provider": result.provider,
+        "base_url": result.base_url,
         "target_payload": result.target_payload,
         "summary": {
             "total_attacks": result.total_attacks,

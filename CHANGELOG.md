@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- `--json PATH` writes the machine-readable report **in addition to** `--output`, so one run
+  produces both a markdown report for a human and a JSON artifact for the next run to be
+  compared against. It is written before the CI gate sets a non-zero exit code, so the
+  artifact exists on the failure path.
+- The JSON and markdown reports now record `provider` and `base_url`. The same model ID
+  behind a different gateway is a different target, and a baseline is only comparable against
+  a run of the same one.
+- The exit-code contract (`0` within threshold, `1` exceeded or unwritable report, `2` not
+  evaluable) is printed at the bottom of `hermes-jailbench --help`, not only in the README.
+- A composite GitHub Action at the repository root (`action.yml`), so the gate is one step:
+  inputs `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`,
+  `version` and `python-version`, all optional. The key reaches the CLI through the step's
+  environment rather than the command line, so it never enters the runner's process list.
+  `pyyaml` is added to the **dev** extra only, for the test that parses the action.
 - `--provider {anthropic,openai-compat}` with `--base-url` and the existing `--model`.
   `openai-compat` posts to `{base-url}/chat/completions`, the shape Ollama, vLLM, LM Studio,
   llama.cpp's server, OpenRouter and OpenAI speak, so the battery can be run against a local
