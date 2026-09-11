@@ -596,10 +596,39 @@ GARAK_CLEAN_TOKEN = "safe"
 #: "unsafe" does not start with "safe", so the two verdicts never collide.
 GARAK_FLAGGED_TOKEN = "unsafe"
 
-#: `scan()` keyword arguments garak may forward through the generator's `kwargs`
-#: config. Anything else is ignored rather than raising, so an unrelated garak
-#: option cannot end a run.
+#: `scan()` keyword arguments accepted through the generator's `kwargs` config.
+#: garak forwards only what the user wrote there (`Single._call_model` calls
+#: `self.generator(text, **self.kwargs)`), so any other key is a config mistake
+#: and is rejected rather than silently dropped.
 _GARAK_FORWARDED_KWARGS = ("max_match_length", "clean_threshold", "injection_threshold")
+
+
+def _garak_scan_kwargs(kwargs: dict) -> dict:
+    """Validate garak-forwarded kwargs; raise TypeError/ValueError on a bad call."""
+    unknown = sorted(set(kwargs) - set(_GARAK_FORWARDED_KWARGS))
+    if unknown:
+        raise TypeError(
+            f"garak_single() got unexpected keyword argument(s) {unknown}; "
+            f"accepted: {list(_GARAK_FORWARDED_KWARGS)}"
+        )
+
+    if "max_match_length" in kwargs:
+        value = kwargs["max_match_length"]
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise TypeError(f"max_match_length must be an int, got {type(value).__name__}")
+        if value < 1:
+            raise ValueError(f"max_match_length must be >= 1, got {value}")
+
+    for key in ("clean_threshold", "injection_threshold"):
+        if key not in kwargs:
+            continue
+        value = kwargs[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError(f"{key} must be a number, got {type(value).__name__}")
+        if not 0.0 <= value <= 1.0:  # also rejects NaN
+            raise ValueError(f"{key} must be between 0 and 1, got {value}")
+
+    return dict(kwargs)
 
 
 def garak_single(prompt: str, **kwargs) -> list[str]:
@@ -612,11 +641,16 @@ def garak_single(prompt: str, **kwargs) -> list[str]:
     stateless and reads one message, so multi-turn probes are out of scope.
 
     Args:
-        prompt:   The message to scan. A non-string is scanned as an empty
-                  message rather than raising.
-        **kwargs: Forwarded from garak's generator `kwargs` config. The
+        prompt:   The message to scan. Must be a string.
+        **kwargs: Forwarded from garak's generator `kwargs` config. Only the
                   `scan()` tuning arguments in `_GARAK_FORWARDED_KWARGS` are
-                  honoured; anything else is ignored.
+                  accepted, and each is type- and range-checked.
+
+    Raises:
+        TypeError:  `prompt` is not a string, a kwarg is not one of
+                    `_GARAK_FORWARDED_KWARGS`, or a kwarg has the wrong type.
+        ValueError: `max_match_length` < 1, or a threshold outside [0, 1]
+                    (NaN included).
 
     Returns:
         A one-element list. The string starts with "safe" when the prescan finds
@@ -624,9 +658,12 @@ def garak_single(prompt: str, **kwargs) -> list[str]:
         summary of the scan. Timing is deliberately left out so the same message
         always produces the same string.
     """
-    message = prompt if isinstance(prompt, str) else ""
-    scan_kwargs = {key: kwargs[key] for key in _GARAK_FORWARDED_KWARGS if key in kwargs}
-    result = scan(message, **scan_kwargs)
+    # A malformed call must not come back "safe": scanning a non-string as "" would
+    # report a clean verdict for input that was never scanned.
+    if not isinstance(prompt, str):
+        raise TypeError(f"garak_single() prompt must be a str, got {type(prompt).__name__}")
+    scan_kwargs = _garak_scan_kwargs(kwargs)
+    result = scan(prompt, **scan_kwargs)
 
     token = GARAK_CLEAN_TOKEN if result.is_clean else GARAK_FLAGGED_TOKEN
     categories = sorted({p.category for p in result.detected_patterns})

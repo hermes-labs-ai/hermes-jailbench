@@ -295,8 +295,9 @@ python -m garak \
 
 Use `--detectors shields.Down` with a known-clean probe to measure false positives.
 `scan()`'s tuning arguments (`clean_threshold`, `injection_threshold`,
-`max_match_length`) can be passed through garak's generator `kwargs`; any other
-keyword is ignored rather than ending the run.
+`max_match_length`) can be passed through garak's generator `kwargs`. Any other
+keyword, a wrongly typed or out-of-range value, or a non-string prompt raises
+`TypeError` / `ValueError` instead of being dropped or scanned as an empty message.
 
 ```python
 from hermes_jailbench import garak_single
