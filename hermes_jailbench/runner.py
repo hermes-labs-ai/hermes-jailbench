@@ -85,6 +85,25 @@ def _is_retryable_error(exc: Exception) -> bool:
     return False
 
 
+def _response_text(message: object) -> str:
+    """
+    Extract the text of the first content block, or raise a readable error.
+
+    A provider reply that is well-formed JSON but carries no content blocks, or
+    whose first block has no text, is a malformed response — it must surface as
+    exactly that in the report, not as a bare IndexError/AttributeError string.
+    It is not retried: the reply was received, it just cannot be scored.
+    """
+    content = getattr(message, "content", None)
+    if not content:
+        raise ValueError("malformed response: message carries no content blocks")
+    text = getattr(content[0], "text", None)
+    if text is None:
+        block_type = getattr(content[0], "type", type(content[0]).__name__)
+        raise ValueError(f"malformed response: first content block ({block_type}) has no text")
+    return text
+
+
 def _call_with_retry(
     client: object,
     model: str,
@@ -119,7 +138,7 @@ def _call_with_retry(
                 max_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return message.content[0].text
+            return _response_text(message)
         except Exception as exc:
             last_exc = exc
             if not _is_retryable_error(exc):

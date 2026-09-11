@@ -571,3 +571,69 @@ def scan(
 def scan_batch(messages: list[str], **kwargs) -> list[PrescanResult]:
     """Scan multiple messages. Returns results in same order."""
     return [scan(m, **kwargs) for m in messages]
+
+
+# ---------------------------------------------------------------------------
+# garak adapter
+#
+# garak's `generators.function.Single` imports `module#function` and calls it as
+# `function(prompt: str, **kwargs) -> list[str]`, wrapping each returned string
+# in a Message. The `name` parameter is reserved: Single raises ValueError if the
+# target function declares it.
+#
+# The `shields` detectors read the *start* of the reply (matchtype "startswith",
+# case-insensitive): `shields.Up` flags "unsafe" and `shields.Down` flags "safe".
+# So the first token carries the verdict and the rest is human-readable detail.
+#
+# Pinned upstream evidence: garak 3f50ea5 (v0.17.1.pre1),
+# garak/generators/function.py and garak/detectors/shields.py.
+# ---------------------------------------------------------------------------
+
+#: First token for a message the prescan considers clean — read by `shields.Down`.
+GARAK_CLEAN_TOKEN = "safe"
+
+#: First token for a suspicious or injecting message — read by `shields.Up`.
+#: "unsafe" does not start with "safe", so the two verdicts never collide.
+GARAK_FLAGGED_TOKEN = "unsafe"
+
+#: `scan()` keyword arguments garak may forward through the generator's `kwargs`
+#: config. Anything else is ignored rather than raising, so an unrelated garak
+#: option cannot end a run.
+_GARAK_FORWARDED_KWARGS = ("max_match_length", "clean_threshold", "injection_threshold")
+
+
+def garak_single(prompt: str, **kwargs) -> list[str]:
+    """
+    Run the prescan as a garak target (`garak.generators.function.Single`).
+
+    Point garak at this function with
+    ``--target_type function --target_name hermes_jailbench.prescan#garak_single``
+    and score it with the `shields` detectors. Single-turn only: the prescan is
+    stateless and reads one message, so multi-turn probes are out of scope.
+
+    Args:
+        prompt:   The message to scan. A non-string is scanned as an empty
+                  message rather than raising.
+        **kwargs: Forwarded from garak's generator `kwargs` config. The
+                  `scan()` tuning arguments in `_GARAK_FORWARDED_KWARGS` are
+                  honoured; anything else is ignored.
+
+    Returns:
+        A one-element list. The string starts with "safe" when the prescan finds
+        the message clean and "unsafe" otherwise, followed by a deterministic
+        summary of the scan. Timing is deliberately left out so the same message
+        always produces the same string.
+    """
+    message = prompt if isinstance(prompt, str) else ""
+    scan_kwargs = {key: kwargs[key] for key in _GARAK_FORWARDED_KWARGS if key in kwargs}
+    result = scan(message, **scan_kwargs)
+
+    token = GARAK_CLEAN_TOKEN if result.is_clean else GARAK_FLAGGED_TOKEN
+    categories = sorted({p.category for p in result.detected_patterns})
+    return [
+        f"{token} hermes-jailbench-prescan "
+        f"threat={result.threat_level} "
+        f"confidence={result.confidence:.2f} "
+        f"patterns={len(result.detected_patterns)} "
+        f"categories={','.join(categories) if categories else '-'}"
+    ]
