@@ -13,7 +13,9 @@ hermes_jailbench/
   providers.py     — target endpoints: the Anthropic SDK, and a stdlib OpenAI-compatible client
   scorer.py        — score_response() — keyword heuristics, no LLM calls
   report.py        — generate_report() — produces markdown or JSON
-  cli.py           — argparse CLI, on_result_callback for live output, --demo, --fail-on-bypass
+  cli.py           — argparse CLI, on_result_callback for live output, --demo, --fail-on-bypass,
+                     --json, and the `diff` subcommand (dispatched before the run parser)
+  diff.py          — compare two JSON reports: VERDICT_RANK, compare(), render()
   mock_target.py   — loopback stand-in for both routes (behaviour chosen by model name)
   evidence.py      — Hermes Reliability Lab result envelope emitter
   prescan.py       — prompt-injection prescan + garak_single adapter
@@ -25,6 +27,8 @@ tests/
   test_runner.py   — run_bench with a faked SDK client: retries, reply shapes, default model
   test_cli.py      — --fail-on-bypass gate, --demo
   test_providers.py — openai-compat: URL handling, reply shapes, retries, CLI wiring
+  test_ci_mode.py  — --json artifact, exit-code contract, action.yml parses
+  test_diff.py     — regression/improvement classification, unscored attacks, the subcommand
 pyproject.toml     — hatchling build, entry point: hermes-jailbench
 ```
 

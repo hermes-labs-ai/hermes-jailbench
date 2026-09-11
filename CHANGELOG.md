@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- `hermes-jailbench diff BASELINE.json CURRENT.json` compares two `--json` reports and lists
+  the attacks whose verdict changed. Verdicts are ordered `REFUSED < PARTIAL < COMPLIED`: a
+  move up that order is a regression, a move down an improvement. `--fail-on-regression` exits
+  1 when any attack got worse, so a pinned baseline can block a merge; without it the table is
+  printed and the command exits 0. A report that cannot be read or recognised exits 2.
+  An attack that errored on either side has no verdict to rank: it is listed under "Unscored"
+  and counts as neither, because an unscored attack is a hole in the evidence, not a result.
+  Attacks present on only one side, and a baseline whose model, provider, endpoint or target
+  payload differs from the current run, are reported rather than silently absorbed.
+  The subcommand is dispatched before the run parser, so every other invocation parses exactly
+  as before.
 - `--json PATH` writes the machine-readable report **in addition to** `--output`, so one run
   produces both a markdown report for a human and a JSON artifact for the next run to be
   compared against. It is written before the CI gate sets a non-zero exit code, so the
