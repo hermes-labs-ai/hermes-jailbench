@@ -1,6 +1,6 @@
 # hermes-jailbench
 
-hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an Anthropic model endpoint and uses deterministic keyword heuristics to classify each response as refusal, partial, or compliance — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
+hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an Anthropic or OpenAI-compatible model endpoint and uses deterministic keyword heuristics to classify each response as refusal, partial, or compliance — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
 
 - "We changed the system prompt and now I need to know if refusals got weaker."
 - "Our jailbreak testing lives in screenshots and anecdotes instead of something repeatable."
@@ -123,6 +123,10 @@ hermes-jailbench --provider openai-compat \
 - A reply the endpoint's own filter stopped (`finish_reason: content_filter`)
   carries no text to score. It is reported as `provider refusal` and counted as an
   `ERROR`, so the gate reports "not evaluated" rather than banking a free refusal.
+- A credential in the URL itself (`https://user:key@gateway/v1`) is redacted to
+  `https://***@gateway/v1` everywhere the run prints or records it — the console
+  header, error messages, and the `base_url` field of both reports — so it cannot
+  travel with a committed baseline or a CI log. The full URL is still what is sent.
 
 As a Python library:
 
@@ -375,7 +379,7 @@ Against a self-hosted or local endpoint, with no Anthropic key anywhere in the j
     fail-on-bypass: "5"
 ```
 
-Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is passed to the CLI through the step's environment, never interpolated into the command line, so it does not appear in the runner's process list. Pin `@main` to a tag once you have one.
+Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is exported into the step's environment for the CLI to read (`ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` for `provider: openai-compat`) and is never passed as a `--api-key` argument, so it appears neither in the workflow log nor in the runner's process list. Pin `@main` to a tag once you have one.
 
 The same gate without the action:
 
@@ -579,9 +583,9 @@ Honest list of what this tool does not do, so you can plan around it:
 
 - **Keyword scorer, not a judge.** The scorer is pure-Python substring matching — fast and deterministic, but it has false negatives on elaborate indirect compliance and false positives on verbose refusals that quote attacker language. For ambiguous cases use `--include-responses` and eyeball the output.
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
-- **Anthropic SDK only (for now).** OpenAI + local Ollama support is on the v0.2 roadmap. `--dry-run` and the scorer work without any SDK installed.
+- **Two providers.** The Anthropic SDK and any OpenAI-compatible endpoint (`--provider openai-compat`: Ollama, vLLM, LM Studio, OpenRouter, OpenAI). Nothing else speaks a native protocol here. `--dry-run` and the scorer work without any SDK installed.
 - **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool.
-- **No CI Action template yet.** Wire the CLI into a workflow with `--fail-on-bypass` (see [Using it as a CI gate](#using-it-as-a-ci-gate)); a reusable `hermes-labs/hermes-jailbench-action@v1` is on the v0.2 roadmap.
+- **The Action is a thin CLI wrapper, not a new tool.** `action.yml` (see [GitHub Actions](#github-actions)) maps its inputs onto the same `--fail-on-bypass` gate and exit-code contract documented above — it adds no scoring, no SARIF, no dashboard. It is also unversioned today: used as `hermes-labs-ai/hermes-jailbench@main`, there is no released tag to pin it to yet. Pending: publishing it to the GitHub Marketplace, which is an owner-only step.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---
@@ -621,10 +625,10 @@ All tests run without API calls.
 
 Planned OSS work on this package:
 
-1. **v0.1 (current)**: CLI, 45 attacks, Anthropic SDK
-2. **v0.2**: OpenAI + local Ollama endpoint support
-3. **v0.3**: Shareable JSON reports + diff tool for cross-version regression
-4. **v1.0**: Continuous-regression runner (nightly CI, alert on refusal-rate drop), expandable attack library
+1. **Shipped**: CLI, 45 attacks, Anthropic SDK
+2. **Shipped**: OpenAI-compatible endpoint support (`--provider openai-compat`) — OpenAI, Ollama, vLLM, LM Studio, OpenRouter
+3. **Shipped**: machine-readable JSON reports (`--json`), the `diff` subcommand for cross-version regression, and a composite GitHub Action
+4. **Next**: continuous-regression runner (nightly CI, alert on refusal-rate drop), expandable attack library
 
 The package stays MIT, fully free, no hosted tier. The negative-result corpus (every known pattern refused) is itself an asset — it establishes a baseline for measuring model safety improvements and regressions across releases. If you want EU AI Act Article 9 compliance reports or an enterprise red-team engagement delivered as a report, that's the [Hermes Labs audit practice](https://hermes-labs.ai), not a SaaS version of this tool.
 

@@ -93,7 +93,18 @@ runs:
         # last line of the script would end the step with exit 1 and no run.
         if [ -n "$JAILBENCH_MODEL" ]; then args+=(--model "$JAILBENCH_MODEL"); fi
         if [ -n "$JAILBENCH_BASE_URL" ]; then args+=(--base-url "$JAILBENCH_BASE_URL"); fi
-        if [ -n "$JAILBENCH_API_KEY" ]; then args+=(--api-key "$JAILBENCH_API_KEY"); fi
+        # The key is exported for the CLI to read, never appended to args: an
+        # argv entry is visible in the runner's process list to anything else
+        # running on the machine, which matters on a self-hosted runner.
+        # The CLI reads OPENAI_API_KEY for openai-compat and ANTHROPIC_API_KEY
+        # otherwise, so the export matches the selected provider.
+        if [ -n "$JAILBENCH_API_KEY" ]; then
+          if [ "$JAILBENCH_PROVIDER" = "openai-compat" ]; then
+            export OPENAI_API_KEY="$JAILBENCH_API_KEY"
+          else
+            export ANTHROPIC_API_KEY="$JAILBENCH_API_KEY"
+          fi
+        fi
         if [ -n "$JAILBENCH_FAIL_ON_BYPASS" ]; then
           args+=(--fail-on-bypass "$JAILBENCH_FAIL_ON_BYPASS")
         fi
