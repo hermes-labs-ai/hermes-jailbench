@@ -53,6 +53,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   `version` and `python-version`, all optional. The key reaches the CLI through the step's
   environment rather than the command line, so it never enters the runner's process list.
   `pyyaml` is added to the **dev** extra only, for the test that parses the action.
+  `tests/test_action_execution.py` actually runs the action's "Run the battery" shell
+  step as a subprocess (a fake `hermes-jailbench` on `PATH` re-execs the in-repo CLI
+  against the loopback mock target), proving PASS/BYPASS/UNEVALUABLE propagate the
+  CLI's real `0`/`1`/`2` exit codes as the composite step's exit code — not just that
+  `action.yml` parses. The README's Limitations section no longer says "no CI Action
+  template yet"; it names the Action's scope (a thin wrapper, no new scoring) and the
+  one step left: publishing it to the GitHub Marketplace, which is the owner's call.
 - `--provider {anthropic,openai-compat}` with `--base-url` and the existing `--model`.
   `openai-compat` posts to `{base-url}/chat/completions`, the shape Ollama, vLLM, LM Studio,
   llama.cpp's server, OpenRouter and OpenAI speak, so the battery can be run against a local
