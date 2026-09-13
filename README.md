@@ -62,6 +62,28 @@ cd hermes-jailbench
 pip install -e ".[dev]"
 ```
 
+### As an agent skill
+
+The repository root is a portable [Agent Plugin](https://agent-plugins.org)
+(`plugin.json`, Agent Plugins 1.0.0) that ships one skill,
+[`skills/hermes-jailbench/SKILL.md`](skills/hermes-jailbench/SKILL.md). It tells the
+agent to run the regression check against an endpoint you are authorized to test,
+using the installed CLI or a pinned `uvx hermes-jailbench==0.2.0` runner, and to
+summarize the report.
+
+| Host | Install | Read back |
+| --- | --- | --- |
+| Claude Code | `claude plugin marketplace add hermes-labs-ai/hermes-jailbench`<br>`claude plugin install hermes-jailbench@hermes-jailbench` | `claude plugin list` |
+| OpenAI Codex CLI | `codex plugin marketplace add hermes-labs-ai/hermes-jailbench`<br>`codex plugin add hermes-jailbench@hermes-jailbench` | `codex plugin list` |
+| Gemini CLI | `gemini extensions install https://github.com/hermes-labs-ai/hermes-jailbench --ref main` | `gemini skills list` |
+| skills.sh | `npx skills add https://github.com/hermes-labs-ai/hermes-jailbench --skill hermes-jailbench` | `npx skills list` |
+
+Claude Code reads `.claude-plugin/`, Codex reads `.agents/plugins/marketplace.json`
+(entry `./`) and `plugin.json`, and Gemini CLI reads `gemini-extension.json`. All of
+them resolve the same root `skills/` directory. Keep `--ref main` for Gemini CLI:
+without a ref it installs the latest release, v0.2.0, which predates
+`gemini-extension.json`.
+
 ---
 
 ## Quickstart

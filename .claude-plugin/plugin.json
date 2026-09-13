@@ -1,0 +1,9 @@
+{
+  "name": "hermes-jailbench",
+  "version": "0.2.0",
+  "description": "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring",
+  "author": { "name": "Hermes Labs", "email": "roli@hermes-labs.ai" },
+  "homepage": "https://github.com/hermes-labs-ai/hermes-jailbench",
+  "repository": "https://github.com/hermes-labs-ai/hermes-jailbench",
+  "license": "MIT"
+}

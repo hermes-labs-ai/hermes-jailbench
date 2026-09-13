@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hermes-jailbench",
+  "description": "The Hermes Jailbench Claude Code plugin from Hermes Labs.",
+  "owner": {
+    "name": "Hermes Labs",
+    "email": "roli@hermes-labs.ai",
+    "url": "https://github.com/hermes-labs-ai"
+  },
+  "plugins": [
+    {
+      "name": "hermes-jailbench",
+      "source": ".",
+      "description": "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring",
+      "category": "security",
+      "homepage": "https://github.com/hermes-labs-ai/hermes-jailbench"
+    }
+  ]
+}

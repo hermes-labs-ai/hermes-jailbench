@@ -1,5 +1,14 @@
 # CLAUDE.md — hermes-jailbench
 
+<!-- Contributor context v2 — 2026-09-12 (moved from the repo root to .claude/ so the root validates as a plugin) -->
+
+## Priorities and Scope
+Each contributor request is an independent task: scope the change to what was asked and do not carry assumptions over from an earlier one.
+When the guidance below conflicts, follow this priority order:
+1. Keep tests offline and green.
+2. Keep the scorer deterministic; `SPEC.md` §3.1 is the contract.
+3. Keep README, `SPEC.md`, and this file aligned with the code.
+
 ## What This Is
 Automated jailbreak testing CLI. Runs 45 known attack patterns against an LLM endpoint and reports REFUSED / PARTIAL / COMPLIED per attack.
 

@@ -18,7 +18,7 @@
 - `README.md` ✓
 - `SPEC.md` ✓
 - `ROADMAP.md` ✓
-- `CLAUDE.md` ✓
+- `.claude/CLAUDE.md` ✓
 - `AGENTS.md` ✓ (new)
 - `llms.txt` ✓ (new)
 - `CHANGELOG.md` ✓ (new, v0.1.0 entry)

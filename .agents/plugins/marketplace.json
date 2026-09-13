@@ -1,0 +1,20 @@
+{
+  "name": "hermes-jailbench",
+  "interface": {
+    "displayName": "Hermes Jailbench"
+  },
+  "plugins": [
+    {
+      "name": "hermes-jailbench",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Security"
+    }
+  ]
+}
