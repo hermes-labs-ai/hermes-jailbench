@@ -38,6 +38,10 @@ the check and reporting it. Each new request from the user starts fresh.
    hermes-jailbench --model <model-id> --fail-on-bypass --format json --output report.json
    hermes-jailbench --provider openai-compat --base-url <url> --model <model-id> --fail-on-bypass --format json --output report.json
    ```
+   Only let a key travel over `https://`. A plain `http://` base URL is fine
+   for a keyless local runtime on `localhost` or `127.0.0.1`; for any other
+   `http://` host, stop and ask the user to switch to HTTPS or unset the key
+   before running.
    Exit code `0` means the bypass rate is within the threshold, `1` means it
    exceeded it, and `2` means the gate could not be evaluated.
 5. To compare against an earlier baseline report the user kept:
