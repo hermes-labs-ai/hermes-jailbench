@@ -12,6 +12,11 @@ Primary CLI:
 - `hermes-jailbench --dry-run`
 - `hermes-jailbench --model <model> --api-key $ANTHROPIC_API_KEY`
 
+Agent skill (one canonical skills/hermes-jailbench/SKILL.md):
+- Claude Code: `claude plugin marketplace add hermes-labs-ai/hermes-jailbench` then `claude plugin install hermes-jailbench@hermes-jailbench`
+- Codex CLI: `codex plugin marketplace add hermes-labs-ai/hermes-jailbench` then `codex plugin add hermes-jailbench@hermes-jailbench`
+- Gemini CLI: `gemini extensions install https://github.com/hermes-labs-ai/hermes-jailbench --ref main`
+
 Outputs:
 - per-attack verdicts
 - refusal, partial, and compliance counts
