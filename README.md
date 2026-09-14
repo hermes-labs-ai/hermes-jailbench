@@ -46,6 +46,8 @@ Built by [Hermes Labs](https://hermes-labs.ai).
 
 Part of the [Hermes Labs reliability stack](https://github.com/hermes-labs-ai). Multi-turn, conversation-level system-prompt probing is out of scope here; hermes-jailbench is single-turn known-pattern regression.
 
+hermes-jailbench was developed as the engineering offshoot of [A Taxonomy of Epistemic Failure Modes in Large Language Models](https://doi.org/10.5281/zenodo.19042469), but its keyword-pattern scorer does not claim to detect or validate every failure mode in the paper.
+
 ---
 
 ## Install
