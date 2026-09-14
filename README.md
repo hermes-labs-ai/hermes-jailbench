@@ -68,7 +68,7 @@ The repository root is a portable [Agent Plugin](https://agent-plugins.org)
 (`plugin.json`, Agent Plugins 1.0.0) that ships one skill,
 [`skills/hermes-jailbench/SKILL.md`](skills/hermes-jailbench/SKILL.md). It tells the
 agent to run the regression check against an endpoint you are authorized to test,
-using the installed CLI or a pinned `uvx hermes-jailbench==0.2.0` runner, and to
+using the installed CLI or a pinned `uvx hermes-jailbench==0.2.1` runner, and to
 summarize the report.
 
 | Host | Install | Read back |
