@@ -4,6 +4,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-09-14
+
+A patch release: no behaviour change to the benchmark itself. The repository root now
+also ships as a portable [Agent Plugin](https://agent-plugins.org) with one canonical
+skill, so Claude Code, Codex CLI, Gemini CLI, and skills.sh can each install
+`hermes-jailbench` as an agent skill that runs the regression check against an
+authorized endpoint and summarizes the report. See the "As an agent skill" section of
+the README for install commands per host.
+
+### Added
+- Portable `plugin.json` (Agent Plugins 1.0.0), plus host-specific manifests for
+  Claude Code (`.claude-plugin/`), Codex CLI (`.agents/plugins/marketplace.json`), and
+  Gemini CLI (`gemini-extension.json`), all resolving the single skill at
+  `skills/hermes-jailbench/SKILL.md`.
+
 ## [0.2.0] - 2026-09-11
 
 A minor release: the battery now runs against any OpenAI-compatible endpoint, writes a
@@ -204,7 +219,8 @@ No attack catalog, scoring rule, or benchmark behavior changed.
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.1...v0.1.2
