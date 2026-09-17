@@ -82,9 +82,9 @@ summarize the report.
 
 Claude Code reads `.claude-plugin/`, Codex reads `.agents/plugins/marketplace.json`
 (entry `./`) and `plugin.json`, and Gemini CLI reads `gemini-extension.json`. All of
-them resolve the same root `skills/` directory. Keep `--ref main` for Gemini CLI:
-without a ref it installs the latest release, v0.2.0, which predates
-`gemini-extension.json`.
+them resolve the same root `skills/` directory. The current latest release,
+v0.2.1, includes `gemini-extension.json`; `--ref main` remains the explicit
+development-channel choice for Gemini CLI.
 
 ---
 
