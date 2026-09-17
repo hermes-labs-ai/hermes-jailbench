@@ -7,9 +7,17 @@ hermes-jailbench is a jailbreak regression benchmark that runs a repeatable batt
 - "I want a no-key smoke test before I point real credentials at the model."
 - "I need a known-pattern baseline before I claim a model is safer."
 
+For a reproducible regression baseline, install the release you intend to
+compare and record the installed distribution version with the report:
+
 ```bash
-pip install hermes-jailbench
+python -m pip install "hermes-jailbench==0.2.1"
+python -c "from importlib.metadata import version; print(version('hermes-jailbench'))"
+# 0.2.1
 ```
+
+That pin corresponds to the current [v0.2.1 PyPI distribution](https://pypi.org/project/hermes-jailbench/0.2.1/) and its [GitHub release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.1).
+Omit `==0.2.1` only when deliberately testing the newest published package.
 
 ```bash
 hermes-jailbench --demo
@@ -349,12 +357,12 @@ hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 \
   --output jailbench-report.md --json jailbench-report.json
 ```
 
-The JSON carries per-attack verdicts plus a summary and the provenance needed to tell two runs apart:
+The JSON carries per-attack verdicts plus a summary and the provenance needed to tell two runs apart. The schema-only example below is illustrative, not a current benchmark result; its `version` field is the package version that produced the artifact. A report written by the current [v0.2.1 release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.1) records `"version": "0.2.1"`.
 
 ```jsonc
 {
   "generated_at": "2026-09-11T18:47:12Z",
-  "version": "0.1.3",          // the hermes-jailbench that produced it
+  "version": "0.2.1",          // the hermes-jailbench that produced it
   "model": "llama3.2",
   "provider": "openai-compat", // which client spoke to the target
   "base_url": "http://localhost:11434/v1",  // null for the plain Anthropic API
