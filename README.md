@@ -60,6 +60,14 @@ hermes-jailbench was developed as the engineering offshoot of [A Taxonomy of Epi
 
 ## Install
 
+For reproducible baseline testing, use the pinned release:
+
+```bash
+python -m pip install "hermes-jailbench==0.2.1"
+```
+
+For the latest version:
+
 ```bash
 pip install hermes-jailbench
 ```
@@ -420,7 +428,7 @@ The same gate without the action:
   env:
     ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
   run: |
-    pip install hermes-jailbench
+    python -m pip install "hermes-jailbench==0.2.1"
     hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 \
       --output jailbench-report.md --json jailbench-report.json
 ```
@@ -480,7 +488,7 @@ Pinned against **garak commit `3f50ea5` (v0.17.1.pre1)**:
 `garak/generators/function.py` and `garak/detectors/shields.py`.
 
 ```bash
-pip install hermes-jailbench
+python -m pip install "hermes-jailbench==0.2.1"
 
 # Single-turn only. The prescan is stateless and reads one message, so pick
 # single-turn probes; skip the iterative ones (atkgen, tap, goat, fitd,
@@ -540,7 +548,7 @@ this assertion; read them there in `--output` JSON, since Promptfoo may substitu
 its own top-level `reason` on a passing test.
 
 ```bash
-pip install hermes-jailbench
+python -m pip install "hermes-jailbench==0.2.1"
 npm install -g promptfoo@0.123.0
 
 # Absolute path to the module — paste it into the config below
