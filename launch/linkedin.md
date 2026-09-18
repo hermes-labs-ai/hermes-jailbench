@@ -86,4 +86,4 @@ What I want feedback on:
 
 Repo: github.com/hermes-labs-ai/hermes-jailbench
 Homepage: hermes-labs.ai
-Reach out: rbosch@hermes-labs.ai
+Reach out: roli@hermes-labs.ai
