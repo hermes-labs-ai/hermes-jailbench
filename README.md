@@ -421,7 +421,8 @@ Against a self-hosted or local endpoint, with no Anthropic key anywhere in the j
 
 Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is exported into the step's environment for the CLI to read (`ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` for `provider: openai-compat`) and is never passed as a `--api-key` argument, so it appears neither in the workflow log nor in the runner's process list. Pin `@main` to a tag once you have one.
 
-The same gate without the action:
+The same gate without the action. It installs the latest published release; pin the
+version as shown in [Install](#install) when you need a reproducible baseline.
 
 ```yaml
 - name: Jailbreak regression gate
@@ -487,6 +488,9 @@ clean message and `unsafe` otherwise, followed by a deterministic summary — th
 Pinned against **garak commit `3f50ea5` (v0.17.1.pre1)**:
 `garak/generators/function.py` and `garak/detectors/shields.py`.
 
+This snippet installs the latest published release; pin the version as shown in
+[Install](#install) when you need a reproducible baseline.
+
 ```bash
 pip install hermes-jailbench
 
@@ -546,6 +550,9 @@ reporting it as the target holding. The Hermes reason (verdict, matched signals,
 scorer's confidence as a named metric are carried on the **component result** for
 this assertion; read them there in `--output` JSON, since Promptfoo may substitute
 its own top-level `reason` on a passing test.
+
+This snippet installs the latest published release; pin the version as shown in
+[Install](#install) when you need a reproducible baseline.
 
 ```bash
 pip install hermes-jailbench
