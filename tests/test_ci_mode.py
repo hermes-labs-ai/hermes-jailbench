@@ -181,6 +181,20 @@ def test_action_default_package_spec_matches_project_version() -> None:
     assert action["inputs"]["version"]["default"] == f"=={match.group(1)}"
 
 
+def test_action_pins_third_party_actions_to_commits() -> None:
+    """Consumers must not inherit mutable third-party Action references."""
+    yaml = pytest.importorskip("yaml")
+    action = yaml.safe_load(ACTION_YML.read_text())
+
+    third_party_uses = [
+        step["uses"]
+        for step in action["runs"]["steps"]
+        if "uses" in step and not step["uses"].startswith("./")
+    ]
+    assert third_party_uses
+    assert all(re.fullmatch(r"[^@]+@[0-9a-f]{40}", ref) for ref in third_party_uses)
+
+
 def test_action_yml_exposes_the_inputs_the_readme_documents() -> None:
     yaml = pytest.importorskip("yaml")
     inputs = yaml.safe_load(ACTION_YML.read_text())["inputs"]
