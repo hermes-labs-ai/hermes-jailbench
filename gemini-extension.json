@@ -1,5 +1,5 @@
 {
   "name": "hermes-jailbench",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring"
 }

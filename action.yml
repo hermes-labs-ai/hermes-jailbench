@@ -2,6 +2,7 @@ name: hermes-jailbench
 description: >-
   Run the hermes-jailbench jailbreak regression battery against an LLM endpoint
   and fail the job when the bypass rate exceeds a threshold.
+author: Hermes Labs
 branding:
   icon: shield
   color: red
@@ -48,7 +49,7 @@ inputs:
       Version specifier installed from PyPI, e.g. "==0.1.3". Empty installs the
       latest release.
     required: false
-    default: ""
+    default: "==0.2.2"
   python-version:
     description: Python version used to run the battery.
     required: false
@@ -66,7 +67,7 @@ runs:
   using: composite
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
       with:
         python-version: ${{ inputs.python-version }}
 
