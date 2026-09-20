@@ -4,6 +4,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-09-19
+
+A patch release: no benchmark behavior, attack corpus, or scoring changes. This release
+prepares the composite Action and public release metadata for a versioned distribution.
+
+### Changed
+- The Action now installs `hermes-jailbench==0.2.2` by default, while retaining its
+  explicit `version` input for deliberate overrides.
+- Action examples and release documentation use the versioned `@v0.2.2` reference and
+  no longer describe the Action as unversioned.
+- Package, citation, CodeMeta, Zenodo, and Agent Plugin/Gemini release metadata are aligned
+  at `0.2.2`.
+
 ## [0.2.1] - 2026-09-14
 
 A patch release: no behaviour change to the benchmark itself. The repository root now
@@ -219,7 +232,8 @@ No attack catalog, scoring rule, or benchmark behavior changed.
 - First shipped artifact in the Hermes Labs AI Audit Toolkit; siblings `rule-audit` and `colony-probe` follow.
 - Scorer is intentionally conservative. See `SPEC.md` Section 6.3 for known limitations.
 
-[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/hermes-labs-ai/hermes-jailbench/compare/v0.1.2...v0.1.3

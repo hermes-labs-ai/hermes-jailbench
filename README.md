@@ -11,13 +11,13 @@ For a reproducible regression baseline, install the release you intend to
 compare and record the installed distribution version with the report:
 
 ```bash
-python -m pip install "hermes-jailbench==0.2.1"
+python -m pip install "hermes-jailbench==0.2.2"
 python -c "from importlib.metadata import version; print(version('hermes-jailbench'))"
-# 0.2.1
+# 0.2.2
 ```
 
-That pin corresponds to the current [v0.2.1 PyPI distribution](https://pypi.org/project/hermes-jailbench/0.2.1/) and its [GitHub release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.1).
-Omit `==0.2.1` only when deliberately testing the newest published package.
+That pin corresponds to the current [v0.2.2 PyPI distribution](https://pypi.org/project/hermes-jailbench/0.2.2/) and its [GitHub release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.2).
+Omit `==0.2.2` only when deliberately testing the newest published package.
 
 ```bash
 hermes-jailbench --demo
@@ -63,7 +63,7 @@ hermes-jailbench was developed as the engineering offshoot of [A Taxonomy of Epi
 For reproducible baseline testing, use the pinned release:
 
 ```bash
-python -m pip install "hermes-jailbench==0.2.1"
+python -m pip install "hermes-jailbench==0.2.2"
 ```
 
 For the latest version:
@@ -86,7 +86,7 @@ The repository root is a portable [Agent Plugin](https://agent-plugins.org)
 (`plugin.json`, Agent Plugins 1.0.0) that ships one skill,
 [`skills/hermes-jailbench/SKILL.md`](skills/hermes-jailbench/SKILL.md). It tells the
 agent to run the regression check against an endpoint you are authorized to test,
-using the installed CLI or a pinned `uvx hermes-jailbench==0.2.1` runner, and to
+using the installed CLI or a pinned `uvx hermes-jailbench==0.2.2` runner, and to
 summarize the report.
 
 | Host | Install | Read back |
@@ -99,7 +99,7 @@ summarize the report.
 Claude Code reads `.claude-plugin/`, Codex reads `.agents/plugins/marketplace.json`
 (entry `./`) and `plugin.json`, and Gemini CLI reads `gemini-extension.json`. All of
 them resolve the same root `skills/` directory. The current latest release,
-v0.2.1, includes `gemini-extension.json`; `--ref main` remains the explicit
+v0.2.2, includes `gemini-extension.json`; `--ref main` remains the explicit
 development-channel choice for Gemini CLI.
 
 ---
@@ -365,12 +365,12 @@ hermes-jailbench --model claude-haiku-4-5 --fail-on-bypass 5 \
   --output jailbench-report.md --json jailbench-report.json
 ```
 
-The JSON carries per-attack verdicts plus a summary and the provenance needed to tell two runs apart. The schema-only example below is illustrative, not a current benchmark result; its `version` field is the package version that produced the artifact. A report written by the current [v0.2.1 release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.1) records `"version": "0.2.1"`.
+The JSON carries per-attack verdicts plus a summary and the provenance needed to tell two runs apart. The schema-only example below is illustrative, not a current benchmark result; its `version` field is the package version that produced the artifact. A report written by the current [v0.2.2 release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.2) records `"version": "0.2.2"`.
 
 ```jsonc
 {
   "generated_at": "2026-09-11T18:47:12Z",
-  "version": "0.2.1",          // the hermes-jailbench that produced it
+  "version": "0.2.2",          // the hermes-jailbench that produced it
   "model": "llama3.2",
   "provider": "openai-compat", // which client spoke to the target
   "base_url": "http://localhost:11434/v1",  // null for the plain Anthropic API
@@ -393,7 +393,7 @@ The repository ships a composite action, so the whole gate is one step:
 
 ```yaml
 - name: Jailbreak regression gate
-  uses: hermes-labs-ai/hermes-jailbench@main
+  uses: hermes-labs-ai/hermes-jailbench@v0.2.2
   with:
     model: claude-haiku-4-5
     api-key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -411,7 +411,7 @@ Against a self-hosted or local endpoint, with no Anthropic key anywhere in the j
 
 ```yaml
 - name: Jailbreak regression gate (local model)
-  uses: hermes-labs-ai/hermes-jailbench@main
+  uses: hermes-labs-ai/hermes-jailbench@v0.2.2
   with:
     provider: openai-compat
     base-url: http://localhost:11434/v1
@@ -419,7 +419,7 @@ Against a self-hosted or local endpoint, with no Anthropic key anywhere in the j
     fail-on-bypass: "5"
 ```
 
-Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is exported into the step's environment for the CLI to read (`ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` for `provider: openai-compat`) and is never passed as a `--api-key` argument, so it appears neither in the workflow log nor in the runner's process list. Pin `@main` to a tag once you have one.
+Inputs: `model`, `provider`, `base-url`, `api-key`, `fail-on-bypass`, `output`, `json`, `version`, `python-version` — all optional, all defaulted. The key is exported into the step's environment for the CLI to read (`ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` for `provider: openai-compat`) and is never passed as a `--api-key` argument, so it appears neither in the workflow log nor in the runner's process list. The default package spec is pinned to `==0.2.2`; pass an explicit `version` input when deliberately testing another published package.
 
 The same gate without the action. It installs the latest published release; pin the
 version as shown in [Install](#install) when you need a reproducible baseline.
@@ -632,7 +632,7 @@ Honest list of what this tool does not do, so you can plan around it:
 - **Known patterns only.** The 45 attacks are a curated *refused* corpus — a regression baseline. This is not a novel-attack generator. Use it to detect when a model update weakens established refusals, not to discover new bypasses.
 - **Two providers.** The Anthropic SDK and any OpenAI-compatible endpoint (`--provider openai-compat`: Ollama, vLLM, LM Studio, OpenRouter, OpenAI). Nothing else speaks a native protocol here. `--dry-run` and the scorer work without any SDK installed.
 - **Single-turn only.** Multi-turn attacks (fiction escalation, conversation-level integrity attacks, distributed extraction) are out of scope for this tool.
-- **The Action is a thin CLI wrapper, not a new tool.** `action.yml` (see [GitHub Actions](#github-actions)) maps its inputs onto the same `--fail-on-bypass` gate and exit-code contract documented above — it adds no scoring, no SARIF, no dashboard. It is also unversioned today: used as `hermes-labs-ai/hermes-jailbench@main`, there is no released tag to pin it to yet. Pending: publishing it to the GitHub Marketplace, which is an owner-only step.
+- **The Action is a thin CLI wrapper, not a new tool.** `action.yml` (see [GitHub Actions](#github-actions)) maps its inputs onto the same `--fail-on-bypass` gate and exit-code contract documented above — it adds no scoring, no SARIF, no dashboard. Use the versioned `hermes-labs-ai/hermes-jailbench@v0.2.2` reference for a reproducible Action release; the package default is pinned to the matching `==0.2.2` release while an explicit `version` input remains available for deliberate overrides. Publishing the Action to the GitHub Marketplace remains an owner-controlled step.
 - **Rate limits are your responsibility.** Default `--delay 0.5s` is conservative; increase for strict limits. There's exponential backoff on transient errors but the tool will not throttle itself past `--delay`.
 
 ---

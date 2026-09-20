@@ -19,12 +19,12 @@ the check and reporting it. Each new request from the user starts fresh.
    point it at third-party services the user does not control.
 2. Pick a runner: if `hermes-jailbench --help` works, use the bare
    `hermes-jailbench` command below. Otherwise prefer
-   `uvx hermes-jailbench==0.2.1` (zero-install, no PATH changes) over
-   `pipx install hermes-jailbench==0.2.1` unless the user wants it installed
+   `uvx hermes-jailbench==0.2.2` (zero-install, no PATH changes) over
+   `pipx install hermes-jailbench==0.2.2` unless the user wants it installed
    persistently. Keep the exact version pin so neither fetches an unreviewed
    newer release. The commands below are written with the bare
    `hermes-jailbench`; if you picked uvx, run each one as
-   `uvx hermes-jailbench==0.2.1 <same arguments>` instead, because the uvx
+   `uvx hermes-jailbench==0.2.2 <same arguments>` instead, because the uvx
    runner does not put `hermes-jailbench` on PATH.
 3. Smoke-test offline first. This needs no API key and sends no requests:
    ```
