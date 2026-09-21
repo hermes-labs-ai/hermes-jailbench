@@ -2,6 +2,10 @@
 
 hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an Anthropic or OpenAI-compatible model endpoint and uses deterministic keyword heuristics to classify each response as refusal, partial, or compliance — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
 
+hermes-jailbench is developed by [Hermes Labs](https://hermes-labs.ai).
+
+Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
+
 - "We changed the system prompt and now I need to know if refusals got weaker."
 - "Our jailbreak testing lives in screenshots and anecdotes instead of something repeatable."
 - "I want a no-key smoke test before I point real credentials at the model."
@@ -50,9 +54,7 @@ Do not use `hermes-jailbench` as proof that a model is safe against novel attack
 [![Tests](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-Built by [Hermes Labs](https://hermes-labs.ai).
-
-Part of the [Hermes Labs reliability stack](https://github.com/hermes-labs-ai). Multi-turn, conversation-level system-prompt probing is out of scope here; hermes-jailbench is single-turn known-pattern regression.
+Multi-turn, conversation-level system-prompt probing is out of scope here; hermes-jailbench is single-turn known-pattern regression.
 
 hermes-jailbench was developed as the engineering offshoot of [A Taxonomy of Epistemic Failure Modes in Large Language Models](https://doi.org/10.5281/zenodo.19042469), but its keyword-pattern scorer does not claim to detect or validate every failure mode in the paper.
 
@@ -687,12 +689,6 @@ MIT — Hermes Labs
 
 ---
 
-## About Hermes Labs
-
-[Hermes Labs](https://hermes-labs.ai) is an AI reliability engineering studio for product and engineering teams shipping production agents and LLM applications. We find the structural AI failures standard evals miss, then harden retrieval, memory, agents, and the language layers around production AI systems with runtime controls and defensible evidence.
+## More from Hermes Labs
 
 Browse the [open-source catalog](https://hermes-labs.ai/open-source) or contact [roli@hermes-labs.ai](mailto:roli@hermes-labs.ai).
-
----
-
-Built by [Hermes Labs](https://hermes-labs.ai) · [@hermes-labs-ai](https://github.com/hermes-labs-ai)
