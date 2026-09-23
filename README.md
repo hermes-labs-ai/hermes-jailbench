@@ -1,10 +1,22 @@
-# hermes-jailbench
+<div align="center">
+
+<h1>hermes-jailbench</h1>
+
+<p>A jailbreak regression benchmark that replays known-pattern attacks against Anthropic or OpenAI-compatible endpoints and uses deterministic keyword heuristics to classify refusal, partial, or compliance.</p>
+
+<p>hermes-jailbench is developed by <a href="https://hermes-labs.ai">Hermes Labs</a>.</p>
+
+<p>Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems.</p>
+
+[![PyPI version](https://img.shields.io/pypi/v/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
+[![Python versions](https://img.shields.io/pypi/pyversions/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml)
+[![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+
+</div>
 
 hermes-jailbench is a jailbreak regression benchmark that runs a repeatable battery of known-pattern attacks against an Anthropic or OpenAI-compatible model endpoint and uses deterministic keyword heuristics to classify each response as refusal, partial, or compliance — so you can tell when a model or prompt update silently got less safe on attacks it used to refuse.
-
-hermes-jailbench is developed by [Hermes Labs](https://hermes-labs.ai).
-
-Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
 
 - "We changed the system prompt and now I need to know if refusals got weaker."
 - "Our jailbreak testing lives in screenshots and anecdotes instead of something repeatable."
@@ -47,12 +59,6 @@ Use `hermes-jailbench` when you want a repeatable regression baseline for known 
 Do not use `hermes-jailbench` as proof that a model is safe against novel attacks or multi-turn adversarial campaigns. It is a known-pattern benchmark, not a full red-team program.
 
 ![hermes-jailbench preview](assets/preview.png)
-
-[![PyPI version](https://img.shields.io/pypi/v/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
-[![Python versions](https://img.shields.io/pypi/pyversions/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml)
-[![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 Multi-turn, conversation-level system-prompt probing is out of scope here; hermes-jailbench is single-turn known-pattern regression.
 
