@@ -6,6 +6,6 @@
   "author": { "name": "Hermes Labs", "email": "roli@hermes-labs.ai" },
   "homepage": "https://github.com/hermes-labs-ai/hermes-jailbench",
   "repository": "https://github.com/hermes-labs-ai/hermes-jailbench",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": ["ai-safety", "regression-testing", "agent-skills", "claude-code", "codex", "gemini-cli"]
 }

@@ -71,4 +71,4 @@ All participants abide by `CODE_OF_CONDUCT.md` (Contributor Covenant v2.1). Repo
 
 ## License
 
-By contributing, you agree your contribution is licensed under the project's MIT license.
+By contributing, you agree your contribution is licensed under the project's Apache-2.0 license.
