@@ -1,4 +1,4 @@
-name: Hermes quality rail
+name: Quality checks
 
 on:
   pull_request:
@@ -17,7 +17,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install project and declared gate tools
-        run: python3 -m pip install -e '.' ruff pytest
-      - name: Run declared full gate
-        run: python3 .hermes/hermes_gate_runner.py full
+      - name: Install project and test tools
+        run: python3 -m pip install -e ".[dev]"
+      - name: Run lint checks
+        run: python3 -m ruff check .
+      - name: Run test suite
+        run: python3 -m pytest -q
