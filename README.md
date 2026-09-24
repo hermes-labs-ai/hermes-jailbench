@@ -10,7 +10,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
 [![Python versions](https://img.shields.io/pypi/pyversions/hermes-jailbench.svg)](https://pypi.org/project/hermes-jailbench/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-yellow.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Tests](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/hermes-jailbench/actions/workflows/ci.yml)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
@@ -685,13 +685,13 @@ Planned OSS work on this package:
 3. **Shipped**: machine-readable JSON reports (`--json`), the `diff` subcommand for cross-version regression, and a composite GitHub Action
 4. **Next**: continuous-regression runner (nightly CI, alert on refusal-rate drop), expandable attack library
 
-The package stays MIT, fully free, no hosted tier. The negative-result corpus (every known pattern refused) is itself an asset — it establishes a baseline for measuring model safety improvements and regressions across releases. If you want EU AI Act Article 9 compliance reports or an enterprise red-team engagement delivered as a report, that's the [Hermes Labs audit practice](https://hermes-labs.ai), not a SaaS version of this tool.
+The package stays Apache-2.0, fully free, no hosted tier. The negative-result corpus (every known pattern refused) is itself an asset — it establishes a baseline for measuring model safety improvements and regressions across releases. If you want EU AI Act Article 9 compliance reports or an enterprise red-team engagement delivered as a report, that's the [Hermes Labs audit practice](https://hermes-labs.ai), not a SaaS version of this tool.
 
 ---
 
 ## License
 
-MIT — Hermes Labs
+Apache-2.0 — Hermes Labs
 
 ---
 

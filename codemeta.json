@@ -5,7 +5,7 @@
   "description": "Jailbreak regression benchmark for LLM endpoints with repeatable known-pattern attacks and deterministic scoring.",
   "codeRepository": "https://github.com/hermes-labs-ai/hermes-jailbench",
   "version": "0.2.2",
-  "license": "https://spdx.org/licenses/MIT",
+  "license": "https://spdx.org/licenses/Apache-2.0",
   "programmingLanguage": "Python",
   "runtimePlatform": "Python >=3.10",
   "identifier": [
