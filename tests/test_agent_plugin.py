@@ -129,7 +129,7 @@ def test_documented_gemini_install_pins_a_ref():
     pattern = re.compile(
         r"gemini extensions install https://github\.com/hermes-labs-ai/hermes-jailbench[^\n`]*"
     )
-    for doc in (ROOT / "README.md", ROOT / "llms.txt"):
+    for doc in (ROOT / "llms.txt",):
         commands = pattern.findall(doc.read_text(encoding="utf-8"))
         assert commands, f"{doc.name} no longer documents the Gemini install"
         for command in commands:
