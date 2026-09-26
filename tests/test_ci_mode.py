@@ -195,7 +195,7 @@ def test_action_pins_third_party_actions_to_commits() -> None:
     assert all(re.fullmatch(r"[^@]+@[0-9a-f]{40}", ref) for ref in third_party_uses)
 
 
-def test_action_yml_exposes_the_inputs_the_readme_documents() -> None:
+def test_action_yml_exposes_supported_inputs() -> None:
     yaml = pytest.importorskip("yaml")
     inputs = yaml.safe_load(ACTION_YML.read_text())["inputs"]
 
