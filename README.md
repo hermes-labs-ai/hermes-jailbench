@@ -78,6 +78,7 @@ For the latest version:
 
 ```bash
 pip install hermes-jailbench
+hermes-jailbench --version   # offline; needs no API key
 ```
 
 Or from source:
