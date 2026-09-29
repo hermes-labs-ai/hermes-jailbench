@@ -220,6 +220,8 @@ def main(argv: Optional[list[str]] = None) -> None:
         diff_main(arguments[1:])
         return
 
+    from . import __version__  # deferred: the package __init__ imports this module
+
     parser = argparse.ArgumentParser(
         prog="hermes-jailbench",
         description="Automated jailbreak testing CLI — run a battery of attacks against any LLM endpoint.",
@@ -227,6 +229,11 @@ def main(argv: Optional[list[str]] = None) -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"hermes-jailbench {__version__}",
+    )
     parser.add_argument(
         "--provider",
         choices=list(PROVIDERS),

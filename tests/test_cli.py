@@ -227,3 +227,17 @@ def test_demo_prints_the_library_default_model(capsys) -> None:
     assert f"Model:   {DEFAULT_MODEL}" in out
     assert "Mode:    DRY-RUN (no API calls)" in out
     assert "Total attacks : 17" in out
+
+
+def test_version_flag_needs_no_credentials(monkeypatch, capsys):
+    """--version must answer offline, without --provider/--model or API keys."""
+    import hermes_jailbench
+
+    for name in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "OPENAI_BASE_URL"):
+        monkeypatch.delenv(name, raising=False)
+
+    with pytest.raises(SystemExit) as exit_info:
+        cli.main(["--version"])
+
+    assert exit_info.value.code == 0
+    assert capsys.readouterr().out.strip() == f"hermes-jailbench {hermes_jailbench.__version__}"
