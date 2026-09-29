@@ -78,7 +78,7 @@ For the latest version:
 
 ```bash
 pip install hermes-jailbench
-hermes-jailbench --version   # offline; needs no API key
+python -c "from importlib.metadata import version; print(version('hermes-jailbench'))"   # offline; needs no API key
 ```
 
 Or from source:
