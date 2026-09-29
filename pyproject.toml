@@ -73,6 +73,11 @@ target-version = "py310"
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]
 
+[tool.ruff.format]
+# ruff >= 0.16 also formats Python code blocks in Markdown; README.md and SPEC.md
+# blocks are hand-aligned documentation, so format only Python files (as CI does).
+exclude = ["*.md"]
+
 [tool.mypy]
 python_version = "3.10"
 ignore_missing_imports = true
