@@ -33,6 +33,7 @@ python -c "from importlib.metadata import version; print(version('hermes-jailben
 ```
 
 That pin corresponds to the current [v0.2.2 PyPI distribution](https://pypi.org/project/hermes-jailbench/0.2.2/) and its [GitHub release](https://github.com/hermes-labs-ai/hermes-jailbench/releases/tag/v0.2.2).
+The published v0.2.2 artifacts retain their MIT license; current source on `main` is Apache-2.0.
 Omit `==0.2.2` only when deliberately testing the newest published package.
 
 ```bash
