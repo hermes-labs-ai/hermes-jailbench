@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use hermes-jailbench, please cite it as below."
+message: "If you use the published hermes-jailbench 0.2.2 release, please cite it as below."
 title: "hermes-jailbench: a jailbreak regression benchmark for LLM endpoints"
 abstract: >-
   hermes-jailbench is a jailbreak regression benchmark that runs a repeatable
@@ -14,9 +14,9 @@ authors:
     given-names: "Rolando"
     orcid: "https://orcid.org/0009-0005-4896-1112"
     affiliation: "Hermes Labs"
-license: Apache-2.0
-repository-code: "https://github.com/hermes-labs-ai/hermes-jailbench"
-url: "https://github.com/hermes-labs-ai/hermes-jailbench"
+license: MIT
+repository-code: "https://github.com/hermes-labs-ai/hermes-jailbench/tree/v0.2.2"
+url: "https://pypi.org/project/hermes-jailbench/0.2.2/"
 keywords:
   - "AI reliability"
   - "LLM reliability"
